@@ -1,0 +1,61 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import HeroText from '~/components/widgets/HeroText.astro';
+import Features from '~/components/widgets/Features.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
+
+const metadata = {
+  title: 'Boutique',
+};
+---
+
+<Layout metadata={metadata}>
+  <HeroText
+    tagline="Boutique"
+    title="Quelques objets que je conçois et fabrique"
+    subtitle="Side-projects physiques, en complément du job principal. Production limitée, sur commande, à mes heures perdues."
+  />
+
+  <Features
+    title="En vente bientôt"
+    subtitle="Cette section va se remplir progressivement. Si l'un de ces produits t'intéresse, contacte-moi pour précommander ou personnaliser."
+    items={[
+      {
+        title: 'Cighold — accessoire fumeur modulaire',
+        description: 'Système modulaire pour rouler, allumer, gérer ses sessions sans se cramer les doigts. Pour fumeurs de tabac (et autres). Prototype en finalisation, production début 2026.',
+        icon: 'tabler:flame',
+      },
+      {
+        title: 'Trophées MG Design (sur-mesure)',
+        description: 'Trophées personnalisés en impression 3D pour hackathons, événements pro, communautés. Avec Mael Guyon. Voir mgdesign.cloud.',
+        icon: 'tabler:trophy',
+        callToAction: {
+          target: '_blank',
+          text: 'Voir MG Design',
+          href: 'https://mgdesign.cloud',
+        },
+      },
+      {
+        title: 'Pièces & accessoires impression 3D',
+        description: 'Petites pièces sur commande : organisateurs de bureau, supports, kits DIY pour homelab, etc. Vous décrivez, on conçoit, on imprime.',
+        icon: 'tabler:3d-cube-sphere',
+      },
+    ]}
+  />
+
+  <CallToAction
+    actions={[
+      {
+        variant: 'primary',
+        text: 'Me contacter pour un projet sur-mesure',
+        href: '/contact',
+        icon: 'tabler:mail',
+      },
+    ]}
+  >
+    <Fragment slot="title">Une idée d'objet à fabriquer ?</Fragment>
+    <Fragment slot="subtitle">
+      L'impression 3D ouvre un monde de possibles. Si tu cherches quelque chose qui n'existe pas encore, parlons-en.
+    </Fragment>
+  </CallToAction>
+</Layout>

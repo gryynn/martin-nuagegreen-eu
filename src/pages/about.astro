@@ -1,0 +1,140 @@
+---
+import Hero from '~/components/widgets/Hero.astro';
+import Stats from '~/components/widgets/Stats.astro';
+import Steps2 from '~/components/widgets/Steps2.astro';
+import Content from '~/components/widgets/Content.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'À propos',
+};
+---
+
+<Layout metadata={metadata}>
+  <!-- HERO -->
+  <Hero
+    tagline="À propos"
+  >
+    <Fragment slot="title">
+      Ingénieur méca de formation, <br />
+      <span class="text-accent dark:text-white">bricoleur d'IA et de machines 3D.</span>
+    </Fragment>
+
+    <Fragment slot="subtitle">
+      Je m'appelle Martin Green, j'ai grandi en Saône-et-Loire, j'habite à Ivry-sur-Seine, je travaille à Paris.
+      Sur le papier je suis chef de projet ingénierie chez Enedis. Hors du papier, j'occupe un endroit que peu de gens habitent : le pont entre l'IA et la fabrication physique.
+    </Fragment>
+  </Hero>
+
+  <!-- NARRATIVE -->
+  <Content
+    isReversed
+    tagline="Le récit"
+    title="Pourquoi ce profil hybride existe"
+    items={[
+      {
+        title: 'Le tangible d\'abord',
+        description: 'Bac STI2D mention TB à Cluny, DUT GMP à Angers, Bachelor ENSAM. Au lycée j\'ai monté un club de skate et financé sa rampe. À Angers j\'ai présidé le BDE. J\'aime les choses concrètes — les gens, les engins, les pièces qui s\'emboîtent.',
+      },
+      {
+        title: 'La mécanique en pratique',
+        description: 'Trois ans en alternance chez Tetra Pak Dijon en gestion de projet industriel : installation de machines, méthode TPM, développement d\'un chariot de transport pour réduire les TMS. Mobilité 3 mois en Italie. C\'est là que j\'ai appris à piloter des chantiers complexes.',
+      },
+      {
+        title: 'Le déclic data',
+        description: 'Apprentissage Enedis Service Transition Énergétique : développement d\'une plateforme de suivi des projets ENR avec les acteurs territoriaux (DREAL, SRADDET, Préfecture). Power BI, Supabase, Agile. Première fois que je vois ce que la donnée bien pensée peut transformer.',
+      },
+      {
+        title: 'En parallèle, l\'écosystème perso',
+        description: 'En 2 ans j\'ai construit en autodidacte (avec l\'IA générative comme levier) tout un écosystème : homelab GREEN-LAB, apps perso (NOMAD, Mirai), agent IA local Hermès, 14+ schémas Supabase qui captent ma vie. La preuve par le faire de ma dégooglisation.',
+      },
+      {
+        title: 'Aujourd\'hui',
+        description: 'CDI Chef de projet ingénierie Enedis (DR Paris, Agence Ingénierie Structure Paris) — pilotage des chantiers de renouvellement du réseau électrique parisien. Et en continuité, j\'expérimente le pivot vers l\'IA appliquée et la robotique DIY.',
+      },
+    ]}
+  />
+
+  <!-- VALEURS -->
+  <Steps2
+    title="Mon mantra"
+    subtitle="Trois mots qui résument pourquoi je construis ce que je construis."
+    items={[
+      {
+        title: 'Souveraineté',
+        description: 'Avoir mes données, mes systèmes, mes outils. Ne pas dépendre d\'acteurs étrangers pour ce qui est important. Self-host quand c\'est possible, comprendre la stack quand ça ne l\'est pas.',
+      },
+      {
+        title: 'Liberté',
+        description: 'Choisir mes contraintes plutôt que les subir. Garder la possibilité de changer d\'outil, de fournisseur, d\'architecture. Le contraire du verrouillage.',
+      },
+      {
+        title: 'Puissance',
+        description: 'Une fois la souveraineté acquise, connecter ce qui existe pour faire des choses qu\'aucun outil hors-sol ne ferait. La puissance, c\'est l\'effet de réseau d\'un système maîtrisé.',
+      },
+    ]}
+  />
+
+  <!-- COMPLÉMENTAIRE -->
+  <Stats
+    title="Quelques chiffres"
+    stats={[
+      { title: 'Schémas Supabase en prod', amount: '14+' },
+      { title: 'Services Docker auto-hébergés', amount: '20+' },
+      { title: 'Notes atomiques dans le vault', amount: '300+' },
+      { title: 'TOEIC anglais', amount: '945' },
+    ]}
+  />
+
+  <!-- ATTENTION DOMAINES -->
+  <Content
+    tagline="Centres d'intérêt"
+    title="Ce qui m'occupe en dehors du job"
+    items={[
+      {
+        title: 'IA appliquée et agents autonomes',
+        description: 'Je suis particulièrement intéressé par les architectures d\'agents (LangGraph, MCP, RAG), les world models (JEPA), et la question de comment rendre les LLM réellement utiles au quotidien.',
+        icon: 'tabler:robot',
+      },
+      {
+        title: 'Robotique DIY et impression 3D',
+        description: 'Côté physique, j\'aime construire — Arduino, ESP32, modélisation Fusion 360 et Blender, impression 3D. Mon side-project MG Design est né de là.',
+        icon: 'tabler:tools',
+      },
+      {
+        title: 'Souveraineté numérique',
+        description: 'Je suis un peu obsédé par la question de la dépendance technologique européenne. Je pense que les prochaines années se joueront beaucoup sur la capacité à reconstruire des stacks autonomes.',
+        icon: 'tabler:shield-lock',
+      },
+      {
+        title: 'PKM et système de pilotage perso',
+        description: 'Vault Obsidian, schémas Supabase, dashboards data-oriented. Je traite ma propre vie comme un cockpit avec ses indicateurs, pas comme une suite de jours.',
+        icon: 'tabler:dashboard',
+      },
+    ]}
+  />
+
+  <!-- CTA CONTACT -->
+  <CallToAction
+    actions={[
+      {
+        variant: 'primary',
+        text: 'Me contacter',
+        href: '/contact',
+        icon: 'tabler:mail',
+      },
+      {
+        text: 'Mon LinkedIn',
+        href: 'https://www.linkedin.com/in/martingreenfrance',
+        target: '_blank',
+        icon: 'tabler:brand-linkedin',
+      },
+    ]}
+  >
+    <Fragment slot="title">Envie d'en parler ?</Fragment>
+    <Fragment slot="subtitle">
+      Que ce soit pour discuter d'IA appliquée, d'un projet de robotique, d'un side-project, ou juste pour échanger — la porte est ouverte.
+    </Fragment>
+  </CallToAction>
+</Layout>

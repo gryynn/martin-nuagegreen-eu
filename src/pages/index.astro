@@ -1,0 +1,201 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+import Hero from '~/components/widgets/Hero.astro';
+import Features from '~/components/widgets/Features.astro';
+import Content from '~/components/widgets/Content.astro';
+import Steps from '~/components/widgets/Steps.astro';
+import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
+
+const metadata = {
+  title: 'Martin Green — Maillon digital ↔ réel',
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <!-- HERO -->
+  <Hero
+    tagline="Maillon digital ↔ réel"
+    actions={[
+      {
+        variant: 'primary',
+        text: 'Mes projets',
+        href: '#projets',
+        icon: 'tabler:apps',
+      },
+      {
+        text: 'À propos',
+        href: '/about',
+      },
+    ]}
+  >
+    <Fragment slot="title">
+      Je fais le pont entre <span class="text-accent dark:text-white highlight">l'IA</span> et la <span class="text-accent dark:text-white highlight">fabrication physique</span>.
+    </Fragment>
+
+    <Fragment slot="subtitle">
+      Chef de projet ingénierie chez <strong>Enedis</strong> à Paris.
+      Bricoleur d'agents IA, d'apps offline-first, et d'objets imprimés en 3D.
+      Au croisement du digital et du réel.
+    </Fragment>
+  </Hero>
+
+  <!-- PROJETS -->
+  <Features
+    id="projets"
+    tagline="Projets"
+    title="Ce que je construis"
+    subtitle="Un écosystème personnel d'outils où data, agents IA et fabrication physique se rencontrent."
+    items={[
+      {
+        title: 'Homelab GREEN-LAB',
+        description:
+          '20+ services Docker auto-hébergés (Nextcloud, Supabase, n8n, Hermès AI stack) derrière Cloudflare Tunnel + Tailscale. Pleine souveraineté numérique en pratique.',
+        icon: 'tabler:server-2',
+      },
+      {
+        title: 'NOMAD',
+        description:
+          'PWA de capture audio multi-sources avec pipeline transcription puis vault Obsidian via Supabase. React + Python + Whisper.',
+        icon: 'tabler:microphone-2',
+      },
+      {
+        title: 'Mirai',
+        description:
+          'App Flutter de time-tracking fractal, offline-first avec sync Supabase. Architecture documentée par 16 ADR. Live sur Samsung S26.',
+        icon: 'tabler:device-mobile',
+      },
+      {
+        title: 'Hermès AI Stack',
+        description:
+          'Agent IA local avec mémoire long-terme, RAG Qdrant sur le vault, MCPs (TickTick, Home Assistant, Supabase). Kimi K2 via OpenRouter.',
+        icon: 'tabler:robot',
+      },
+      {
+        title: 'MG Design',
+        description:
+          "Atelier d'objets personnalisés en impression 3D avec Mael Guyon. Présenté à la Créativ Week Berlin 2025 (concours Altern up FIPA).",
+        icon: 'tabler:3d-cube-sphere',
+      },
+      {
+        title: 'PSM — système de pilotage perso',
+        description:
+          '14+ schémas Supabase qui captent ma vie au quotidien (humeur, habitudes, finance, santé). Bilans hebdomadaires automatisés. Cockpit data-oriented.',
+        icon: 'tabler:dashboard',
+      },
+    ]}
+  />
+
+  <!-- PARCOURS -->
+  <Content
+    id="parcours"
+    tagline="Parcours"
+    title="Du tangible au digital, et retour"
+    items={[
+      {
+        title: 'Origine mécanique',
+        description:
+          "Bac STI2D mention TB, DUT GMP, Bachelor ENSAM Angers, ingénieur CESI. Trois ans en alternance chez Tetra Pak en gestion de projet industriel.",
+        icon: 'tabler:settings-cog',
+      },
+      {
+        title: 'Pivot data + IA',
+        description:
+          "Apprentissage Enedis Service Transition Énergétique — plateforme de suivi des projets ENR avec Power BI et Supabase. Le déclic data.",
+        icon: 'tabler:chart-line',
+      },
+      {
+        title: "Construction d'un écosystème",
+        description:
+          "En parallèle, dégooglisation complète sur 2 ans : homelab, apps perso, agents IA, schémas data. La preuve par le faire.",
+        icon: 'tabler:bricks',
+      },
+      {
+        title: "Aujourd'hui",
+        description:
+          "CDI Chef de projet ingénierie Enedis (renouvellement réseau parisien). En continuité, je pousse l'idée que les startups IA ont besoin de profils qui font le pont vers le physique.",
+        icon: 'tabler:point',
+      },
+    ]}
+    image={{
+      src: '~/assets/images/default.png',
+      alt: 'Parcours Martin Green',
+    }}
+  >
+    <Fragment slot="content">
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
+        Mon mantra
+      </h3>
+      <p class="text-muted dark:text-slate-400 text-lg">
+        <strong>Souveraineté · Liberté · Puissance.</strong> Avoir mes données, mes outils, mes systèmes — pour pouvoir les connecter intelligemment.
+      </p>
+    </Fragment>
+  </Content>
+
+  <!-- COMPETENCES -->
+  <Steps
+    title="Ce que je sais faire"
+    tagline="Compétences"
+    items={[
+      {
+        title: 'Gestion de projet industriel',
+        description: 'Lean 6 Sigma Green Belt, Waterfall (TPM), Agile. MS Project, Fibery, Excel avancé. Toute ma carrière.',
+        icon: 'tabler:briefcase',
+      },
+      {
+        title: 'Data et IA appliquée',
+        description: 'PostgreSQL/Supabase (14+ schémas en prod), Power BI, Python, n8n, MCP servers, RAG/Qdrant, agents Claude/Kimi.',
+        icon: 'tabler:database',
+      },
+      {
+        title: 'Self-hosting et souveraineté',
+        description: 'Docker (20+ services), Linux, Traefik, Cloudflare Tunnel, Tailscale. Homelab et apps personnelles intégrées.',
+        icon: 'tabler:shield-lock',
+      },
+      {
+        title: 'Hardware DIY',
+        description: 'Fusion 360, Blender, impression 3D, ESP32/Arduino, hydroponie, conception mécanique générale.',
+        icon: 'tabler:tools',
+      },
+      {
+        title: 'Langues',
+        description: 'Français natif. Anglais C1 (TOEIC 945). Espagnol B2. Allemand notions.',
+        icon: 'tabler:world',
+      },
+    ]}
+    classes={{ container: 'max-w-3xl' }}
+  />
+
+  <!-- ARTICLES -->
+  <BlogLatestPosts
+    id="articles"
+    title="Articles récents"
+    information={`Notes longues sur ce que je construis et ce que j'apprends.`}
+  />
+
+  <!-- CTA -->
+  <CallToAction
+    actions={[
+      {
+        variant: 'primary',
+        text: 'Me contacter',
+        href: '/contact',
+        icon: 'tabler:mail',
+      },
+      {
+        text: 'GitHub',
+        href: 'https://github.com/gryynn',
+        target: '_blank',
+        icon: 'tabler:brand-github',
+      },
+    ]}
+  >
+    <Fragment slot="title">Une idée à pousser ensemble ?</Fragment>
+    <Fragment slot="subtitle">
+      Freelance, collaboration, candidature, side-project — j'ai un appétit large.
+      Le plus simple : un mail ou un message LinkedIn.
+    </Fragment>
+  </CallToAction>
+</Layout>

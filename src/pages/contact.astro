@@ -1,0 +1,71 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import HeroText from '~/components/widgets/HeroText.astro';
+import Features2 from '~/components/widgets/Features2.astro';
+
+const metadata = {
+  title: 'Contact',
+};
+---
+
+<Layout metadata={metadata}>
+  <HeroText
+    tagline="Contact"
+    title="Discutons"
+    subtitle="Le plus simple : email ou LinkedIn. Je réponds en général dans les 48h."
+  />
+
+  <Features2
+    title="Où me joindre"
+    columns={2}
+    items={[
+      {
+        title: 'Email',
+        description: 'martin.greengraham@gmail.com',
+        icon: 'tabler:mail',
+      },
+      {
+        title: 'LinkedIn',
+        description: 'linkedin.com/in/martingreenfrance',
+        icon: 'tabler:brand-linkedin',
+      },
+      {
+        title: 'GitHub',
+        description: 'github.com/gryynn',
+        icon: 'tabler:brand-github',
+      },
+      {
+        title: 'Localisation',
+        description: 'Ivry-sur-Seine — Paris, France',
+        icon: 'tabler:map-pin',
+      },
+    ]}
+  />
+
+  <Features2
+    title="Pour quoi me contacter ?"
+    columns={2}
+    items={[
+      {
+        title: 'Side-project ou collaboration',
+        description: 'Idée à pousser ensemble, projet open-source à co-construire, expérimentation IA / hardware. Toujours preneur.',
+        icon: 'tabler:bulb',
+      },
+      {
+        title: 'Freelance ou mission',
+        description: 'Conseil data, automatisation, agents IA, MCP servers, intégration Supabase. Disponibilité limitée mais ponctuellement ouvert.',
+        icon: 'tabler:briefcase',
+      },
+      {
+        title: 'Recrutement',
+        description: 'Si tu cherches un profil maillon digital ↔ réel pour ton équipe IA appliquée ou industrielle, parlons-en.',
+        icon: 'tabler:user-search',
+      },
+      {
+        title: 'MG Design (impression 3D)',
+        description: 'Pour des objets sur-mesure (trophées, prototypes), passe par mgdesign.cloud avec Mael Guyon.',
+        icon: 'tabler:3d-cube-sphere',
+      },
+    ]}
+  />
+</Layout>
