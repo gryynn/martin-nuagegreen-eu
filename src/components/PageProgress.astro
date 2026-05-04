@@ -1,0 +1,204 @@
+---
+// Top loading bar — fires on Astro view transitions
+---
+
+<div id="mg-progress" aria-hidden="true">
+  <div class="mg-progress-bar"></div>
+</div>
+
+<style is:inline>
+  #mg-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 250ms ease-out;
+    overflow: visible;
+  }
+  #mg-progress.is-active {
+    opacity: 1;
+  }
+  #mg-progress.is-done {
+    opacity: 0;
+    transition: opacity 350ms ease-out;
+  }
+
+  /* Light mode: deep forest with strong glow */
+  .mg-progress-bar {
+    position: relative;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(
+      90deg,
+      #0F2A1F 0%,
+      #1B4332 50%,
+      #2D6A4F 100%
+    );
+    box-shadow:
+      0 0 10px rgba(27, 67, 50, 0.95),
+      0 0 20px rgba(45, 106, 79, 0.65),
+      0 0 32px rgba(45, 106, 79, 0.4),
+      0 2px 6px rgba(15, 42, 31, 0.4);
+    transition: width 400ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: width;
+  }
+  /* Dark mode: bright mint glow */
+  .dark .mg-progress-bar {
+    background: linear-gradient(
+      90deg,
+      #34D399 0%,
+      #6EE7B7 50%,
+      #34D399 100%
+    );
+    box-shadow:
+      0 0 10px rgba(52, 211, 153, 1),
+      0 0 20px rgba(110, 231, 183, 0.7),
+      0 0 32px rgba(110, 231, 183, 0.4);
+  }
+
+  /* Shimmer overlay traversing the bar */
+  #mg-progress.is-active .mg-progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 40%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.55) 50%,
+      transparent 100%
+    );
+    animation: mg-shimmer 1.4s linear infinite;
+  }
+
+  @keyframes mg-shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(350%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #mg-progress.is-active .mg-progress-bar::after {
+      animation: none;
+    }
+    .mg-progress-bar {
+      transition: none;
+    }
+  }
+
+  /* Premium page swap — fade + tiny slide via View Transitions */
+  ::view-transition-old(root) {
+    animation: mg-page-out 220ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+  ::view-transition-new(root) {
+    animation: mg-page-in 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes mg-page-out {
+    to {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.998);
+      filter: blur(2px);
+    }
+  }
+  @keyframes mg-page-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.998);
+      filter: blur(3px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    if (window.__mgProgress) return;
+    window.__mgProgress = true;
+
+    let trickle;
+    let value = 0;
+    let startTime = 0;
+    const MIN_SHOW_TIME = 500;
+
+    function getEls() {
+      return {
+        wrap: document.getElementById('mg-progress'),
+        bar: document.querySelector('#mg-progress .mg-progress-bar'),
+      };
+    }
+
+    function set(v) {
+      const { bar } = getEls();
+      if (bar) bar.style.width = v + '%';
+    }
+
+    function start() {
+      const { wrap, bar } = getEls();
+      if (!wrap || !bar) return;
+
+      startTime = performance.now();
+      wrap.classList.remove('is-done');
+      bar.style.transition = 'none';
+      bar.style.width = '0%';
+      void bar.offsetWidth;
+      bar.style.transition = '';
+
+      wrap.classList.add('is-active');
+      value = 30;
+      requestAnimationFrame(() => set(value));
+
+      clearInterval(trickle);
+      trickle = setInterval(() => {
+        const remaining = 85 - value;
+        if (remaining <= 0.5) return;
+        value = Math.min(85, value + remaining * 0.12);
+        set(value);
+      }, 220);
+    }
+
+    function done() {
+      const { wrap } = getEls();
+      if (!wrap || !wrap.classList.contains('is-active')) return;
+      const elapsed = performance.now() - startTime;
+      const wait = Math.max(0, MIN_SHOW_TIME - elapsed);
+      clearInterval(trickle);
+      setTimeout(() => {
+        set(100);
+        setTimeout(() => {
+          wrap.classList.add('is-done');
+          wrap.classList.remove('is-active');
+          setTimeout(() => set(0), 400);
+        }, 200);
+      }, wait);
+    }
+
+    // Astro View Transitions events
+    document.addEventListener('astro:before-preparation', start);
+    document.addEventListener('astro:page-load', done);
+    // Safety net in case page-load doesn't fire after swap
+    document.addEventListener('astro:after-swap', () => {
+      setTimeout(done, 50);
+    });
+  })();
+</script>

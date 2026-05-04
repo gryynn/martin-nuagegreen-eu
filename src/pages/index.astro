@@ -1,12 +1,13 @@
 ---
+import { Icon } from 'astro-icon/components';
 import Layout from '~/layouts/PageLayout.astro';
 
-import Hero from '~/components/widgets/Hero.astro';
-import Features from '~/components/widgets/Features.astro';
 import Content from '~/components/widgets/Content.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
+
+import { projects } from '~/data/projects';
 
 const metadata = {
   title: 'Martin Green — Maillon digital ↔ réel',
@@ -15,78 +16,137 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
-  <!-- HERO -->
-  <Hero
-    tagline="Maillon digital ↔ réel"
-    actions={[
-      {
-        variant: 'primary',
-        text: 'Mes projets',
-        href: '#projets',
-        icon: 'tabler:apps',
-      },
-      {
-        text: 'À propos',
-        href: '/about',
-      },
-    ]}
-  >
-    <Fragment slot="title">
-      Je fais le pont entre <span class="text-accent dark:text-white highlight">l'IA</span> et la <span class="text-accent dark:text-white highlight">fabrication physique</span>.
-    </Fragment>
+  <!-- HERO — bespoke glass + gradient -->
+  <section class="relative not-prose overflow-hidden">
+    <!-- Decorative orbs (subtle, behind content) -->
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div class="absolute top-32 -left-20 w-72 h-72 rounded-full opacity-50"
+           style="background: radial-gradient(circle, var(--aurora-1) 0%, transparent 70%); filter: blur(60px);">
+      </div>
+      <div class="absolute top-1/3 -right-24 w-96 h-96 rounded-full opacity-40"
+           style="background: radial-gradient(circle, var(--aurora-2) 0%, transparent 70%); filter: blur(70px);">
+      </div>
+    </div>
 
-    <Fragment slot="subtitle">
-      Chef de projet ingénierie chez <strong>Enedis</strong> à Paris.
-      Bricoleur d'agents IA, d'apps offline-first, et d'objets imprimés en 3D.
-      Au croisement du digital et du réel.
-    </Fragment>
-  </Hero>
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 pt-10 md:pt-32 pb-12 md:pb-24">
+      <div class="text-center max-w-4xl mx-auto">
+        <!-- Status pill -->
+        <div class="flex justify-center mb-5 md:mb-8 motion-safe:animate-fade" style="animation-delay: 0.05s;">
+          <span class="glass-pill">
+            <span class="status-dot"></span>
+            <span>Disponible · Paris</span>
+            <span class="opacity-40">·</span>
+            <span class="opacity-80">Freelance &amp; collaborations</span>
+          </span>
+        </div>
 
-  <!-- PROJETS -->
-  <Features
-    id="projets"
-    tagline="Projets"
-    title="Ce que je construis"
-    subtitle="Un écosystème personnel d'outils où data, agents IA et fabrication physique se rencontrent."
-    items={[
-      {
-        title: 'Homelab GREEN-LAB',
-        description:
-          '20+ services Docker auto-hébergés (Nextcloud, Supabase, n8n, Hermès AI stack) derrière Cloudflare Tunnel + Tailscale. Pleine souveraineté numérique en pratique.',
-        icon: 'tabler:server-2',
-      },
-      {
-        title: 'NOMAD',
-        description:
-          'PWA de capture audio multi-sources avec pipeline transcription puis vault Obsidian via Supabase. React + Python + Whisper.',
-        icon: 'tabler:microphone-2',
-      },
-      {
-        title: 'Mirai',
-        description:
-          'App Flutter de time-tracking fractal, offline-first avec sync Supabase. Architecture documentée par 16 ADR. Live sur Samsung S26.',
-        icon: 'tabler:device-mobile',
-      },
-      {
-        title: 'Hermès AI Stack',
-        description:
-          'Agent IA local avec mémoire long-terme, RAG Qdrant sur le vault, MCPs (TickTick, Home Assistant, Supabase). Kimi K2 via OpenRouter.',
-        icon: 'tabler:robot',
-      },
-      {
-        title: 'MG Design',
-        description:
-          "Atelier d'objets personnalisés en impression 3D avec Mael Guyon. Présenté à la Créativ Week Berlin 2025 (concours Altern up FIPA).",
-        icon: 'tabler:3d-cube-sphere',
-      },
-      {
-        title: 'PSM — système de pilotage perso',
-        description:
-          '14+ schémas Supabase qui captent ma vie au quotidien (humeur, habitudes, finance, santé). Bilans hebdomadaires automatisés. Cockpit data-oriented.',
-        icon: 'tabler:dashboard',
-      },
-    ]}
-  />
+        <!-- Display heading -->
+        <h1 class="font-heading font-bold text-[2.6rem] sm:text-6xl md:text-7xl lg:text-[5.5rem] leading-[1.05] tracking-tighter mb-6 motion-safe:animate-fade"
+            style="animation-delay: 0.15s;">
+          Le pont entre <br class="hidden sm:block" />
+          <span class="text-gradient">l'IA</span>
+          <span class="opacity-50 font-light">&amp;</span>
+          <span class="text-gradient">le réel</span>.
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="text-lg md:text-xl text-muted leading-relaxed max-w-2xl mx-auto mb-10 motion-safe:animate-fade"
+           style="animation-delay: 0.3s;">
+          Chef de projet ingénierie chez <strong class="text-default">Enedis</strong>.
+          Bricoleur d'agents IA, d'apps offline-first et d'objets imprimés en 3D.
+          Au croisement du digital et de la matière.
+        </p>
+
+        <!-- CTAs -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 motion-safe:animate-fade"
+             style="animation-delay: 0.45s;">
+          <a href="/projets" class="btn-primary group">
+            <span>Voir les projets</span>
+            <Icon name="tabler:arrow-up-right"
+                  class="w-4 h-4 ml-2 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </a>
+          <a href="/about" class="btn-secondary group">
+            <span>À propos</span>
+            <Icon name="tabler:arrow-up-right"
+                  class="w-4 h-4 ml-2 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </a>
+        </div>
+
+        <!-- Mini stats / signal trio -->
+        <div class="flex flex-wrap justify-center items-center gap-x-8 gap-y-3 text-sm text-muted motion-safe:animate-fade"
+             style="animation-delay: 0.6s;">
+          <span class="flex items-center gap-2">
+            <Icon name="tabler:server-2" class="w-4 h-4 opacity-70" />
+            <span>20+ services self-hostés</span>
+          </span>
+          <span class="opacity-30">/</span>
+          <span class="flex items-center gap-2">
+            <Icon name="tabler:robot" class="w-4 h-4 opacity-70" />
+            <span>Agents IA en production</span>
+          </span>
+          <span class="opacity-30">/</span>
+          <span class="flex items-center gap-2">
+            <Icon name="tabler:device-mobile" class="w-4 h-4 opacity-70" />
+            <span>Apps Flutter live</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div class="hidden md:flex justify-center mt-16 motion-safe:animate-fade" style="animation-delay: 0.9s;">
+        <a href="#projets" class="group flex flex-col items-center gap-2 text-muted hover:text-default transition-colors"
+           aria-label="Aller aux projets">
+          <span class="text-xs uppercase tracking-[0.2em]">Scroll</span>
+          <Icon name="tabler:chevron-down" class="w-5 h-5 animate-bounce opacity-60 group-hover:opacity-100" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJETS — teaser avec cards cliquables vers /projets/[slug] -->
+  <section id="projets" class="relative not-prose scroll-mt-[80px]">
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-20">
+      <div class="text-center max-w-3xl mx-auto mb-10 md:mb-14">
+        <p class="text-sm font-semibold tracking-[0.2em] uppercase mb-3" style="color: var(--aw-color-accent);">
+          Projets
+        </p>
+        <h2 class="font-heading font-bold text-4xl md:text-5xl leading-tight tracking-tighter mb-4">
+          Ce que je construis
+        </h2>
+        <p class="text-lg md:text-xl text-muted leading-relaxed">
+          Un écosystème personnel d'outils où data, agents IA et fabrication physique se rencontrent.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-5 md:gap-6">
+        {
+          projects.map((p) => (
+            <a href={`/projets/${p.slug}`} class="glass-card flex flex-col group cursor-pointer" style="text-decoration:none;color:inherit;">
+              <div class="w-12 h-12 p-3 rounded-xl flex items-center justify-center mb-4"
+                   style="background: var(--glass-bg-strong); border: 1px solid var(--glass-border);">
+                <Icon name={p.icon} class="w-6 h-6" style="color: var(--aw-color-accent);" />
+              </div>
+              <h3 class="text-xl md:text-[1.35rem] font-bold mb-2 leading-tight">{p.title}</h3>
+              <p class="text-base text-muted leading-relaxed mb-4 flex-1">{p.summary}</p>
+              <div class="flex items-center gap-1.5 text-sm font-medium opacity-70 group-hover:opacity-100 transition-opacity"
+                   style="color: var(--aw-color-accent);">
+                <span>Voir le projet</span>
+                <Icon name="tabler:arrow-up-right"
+                      class="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </div>
+            </a>
+          ))
+        }
+      </div>
+
+      <div class="flex justify-center mt-10 md:mt-14">
+        <a href="/projets" class="btn-secondary group">
+          <span>Voir tous les projets &amp; filtres</span>
+          <Icon name="tabler:arrow-right" class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-0.5" />
+        </a>
+      </div>
+    </div>
+  </section>
 
   <!-- PARCOURS -->
   <Content

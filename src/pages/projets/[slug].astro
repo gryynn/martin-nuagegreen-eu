@@ -1,0 +1,260 @@
+---
+import { Icon } from 'astro-icon/components';
+import Layout from '~/layouts/PageLayout.astro';
+import Carousel from '~/components/Carousel.astro';
+import { projects, type Project } from '~/data/projects';
+
+export async function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const metadata = {
+  title: `${project.title} — Martin Green`,
+  description: project.tagline,
+};
+
+const statusLabel = {
+  live: 'Live',
+  wip: 'En cours',
+  concept: 'Concept',
+  archived: 'Archivé',
+};
+
+// Related projects (sharing at least one tag)
+const related = projects
+  .filter(
+    (p) => p.slug !== project.slug && p.tags.some((t) => project.tags.includes(t))
+  )
+  .slice(0, 3);
+---
+
+<Layout metadata={metadata}>
+  <article class="relative not-prose overflow-hidden">
+    <!-- Decorative orbs -->
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div class="absolute top-32 -left-20 w-72 h-72 rounded-full opacity-50"
+           style="background: radial-gradient(circle, var(--aurora-1) 0%, transparent 70%); filter: blur(60px);"></div>
+      <div class="absolute top-1/3 -right-24 w-96 h-96 rounded-full opacity-40"
+           style="background: radial-gradient(circle, var(--aurora-2) 0%, transparent 70%); filter: blur(70px);"></div>
+    </div>
+
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 pt-10 md:pt-32 pb-12 md:pb-24">
+      <!-- Breadcrumb -->
+      <nav class="mb-8 md:mb-10" aria-label="Fil d'Ariane">
+        <a href="/projets" class="inline-flex items-center gap-1.5 text-sm text-muted hover:text-default transition-colors">
+          <Icon name="tabler:arrow-left" class="w-4 h-4" />
+          Retour aux projets
+        </a>
+      </nav>
+
+      <!-- Hero -->
+      <header class="mb-10 md:mb-14">
+        <div class="flex items-start justify-between gap-4 mb-6">
+          <div class="w-16 h-16 md:w-20 md:h-20 p-4 md:p-5 rounded-2xl flex items-center justify-center shrink-0"
+               style="background: var(--glass-bg-strong); border: 1px solid var(--glass-border);">
+            <Icon name={project.icon} class="w-8 h-8 md:w-10 md:h-10" style="color: var(--aw-color-accent);" />
+          </div>
+          <div class="flex flex-col items-end gap-1.5 text-sm pt-1">
+            <span
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-medium"
+              style={`background: ${project.status === 'live' ? 'rgba(45,106,79,0.15)' : 'var(--glass-bg)'}; color: ${project.status === 'live' ? 'var(--aw-color-accent)' : 'var(--aw-color-text-muted)'};`}
+            >
+              {project.status === 'live' && <span class="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />}
+              {statusLabel[project.status]}
+            </span>
+            <span class="text-muted opacity-80">{project.year}</span>
+          </div>
+        </div>
+
+        <h1 class="font-heading font-bold text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-tighter mb-4">
+          {project.title}
+        </h1>
+        <p class="text-xl md:text-2xl text-muted leading-relaxed">
+          {project.tagline}
+        </p>
+
+        <!-- Tags -->
+        <div class="flex flex-wrap gap-2 mt-6">
+          {
+            project.tags.map((tag) => (
+              <a
+                href={`/projets#${tag}`}
+                class="text-sm px-3 py-1 rounded-full hover:opacity-80 transition-opacity"
+                style="background: var(--glass-bg); color: var(--aw-color-text-muted); border: 1px solid var(--glass-border);"
+              >
+                #{tag}
+              </a>
+            ))
+          }
+        </div>
+      </header>
+
+      <!-- Metrics -->
+      {
+        project.metrics && project.metrics.length > 0 && (
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 mb-10 md:mb-14">
+            {project.metrics.map((m) => (
+              <div class="glass-card text-center !p-5">
+                <div class="text-2xl md:text-3xl font-bold font-heading mb-1 text-gradient">
+                  {m.value}
+                </div>
+                <div class="text-xs md:text-sm text-muted uppercase tracking-wider">{m.label}</div>
+              </div>
+            ))}
+          </div>
+        )
+      }
+
+      <!-- Carousel (only if screenshots present) -->
+      {
+        project.screenshots && project.screenshots.length > 0 && (
+          <section class="mb-10 md:mb-14">
+            <Carousel slides={project.screenshots} />
+          </section>
+        )
+      }
+
+      <!-- Description -->
+      <section class="mb-10 md:mb-14">
+        <h2 class="text-sm font-semibold tracking-[0.2em] uppercase mb-4" style="color: var(--aw-color-accent);">
+          À propos
+        </h2>
+        <p class="text-lg leading-relaxed">{project.description}</p>
+      </section>
+
+      <!-- Highlights -->
+      <section class="mb-10 md:mb-14">
+        <h2 class="text-sm font-semibold tracking-[0.2em] uppercase mb-5" style="color: var(--aw-color-accent);">
+          Points clés
+        </h2>
+        <ul class="space-y-3">
+          {
+            project.highlights.map((h) => (
+              <li class="flex items-start gap-3">
+                <Icon
+                  name="tabler:check"
+                  class="w-5 h-5 mt-0.5 shrink-0"
+                  style="color: var(--aw-color-accent);"
+                />
+                <span class="text-base leading-relaxed">{h}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <!-- Stack -->
+      <section class="mb-10 md:mb-14">
+        <h2 class="text-sm font-semibold tracking-[0.2em] uppercase mb-4" style="color: var(--aw-color-accent);">
+          Stack
+        </h2>
+        <div class="flex flex-wrap gap-2">
+          {
+            project.stack.map((s) => (
+              <span class="text-sm px-3 py-1.5 rounded-lg font-medium"
+                    style="background: var(--glass-bg-strong); border: 1px solid var(--glass-border);">
+                {s}
+              </span>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- Testimonials -->
+      {
+        project.testimonials && project.testimonials.length > 0 && (
+          <section class="mb-10 md:mb-14">
+            <h2 class="text-sm font-semibold tracking-[0.2em] uppercase mb-5" style="color: var(--aw-color-accent);">
+              Ce qu'en disent les clients
+            </h2>
+            <div class="grid sm:grid-cols-2 gap-4">
+              {project.testimonials.map((t) => (
+                <figure class="glass-card !p-5 flex flex-col">
+                  <Icon name="tabler:quote" class="w-6 h-6 opacity-30 mb-3" style="color: var(--aw-color-accent);" />
+                  <blockquote class="text-base leading-relaxed mb-4 flex-1">"{t.quote}"</blockquote>
+                  <figcaption class="text-sm">
+                    <div class="font-semibold">{t.author}</div>
+                    {t.role && <div class="text-muted opacity-80">{t.role}</div>}
+                    {t.date && <div class="text-muted opacity-60 text-xs mt-1">{t.date}</div>}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <!-- Links -->
+      {
+        project.links && project.links.length > 0 && (
+          <section class="mb-10 md:mb-14">
+            <h2 class="text-sm font-semibold tracking-[0.2em] uppercase mb-4" style="color: var(--aw-color-accent);">
+              Liens
+            </h2>
+            <div class="flex flex-wrap gap-3">
+              {project.links.map((l) => (
+                <a
+                  href={l.href}
+                  target={l.external ? '_blank' : undefined}
+                  rel={l.external ? 'noopener noreferrer' : undefined}
+                  class="btn-secondary"
+                >
+                  {l.icon && <Icon name={l.icon} class="w-4 h-4 mr-2" />}
+                  <span>{l.label}</span>
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <!-- Related projects -->
+      {
+        related.length > 0 && (
+          <section class="mt-14 md:mt-20 pt-10 md:pt-14" style="border-top: 1px solid var(--glass-border);">
+            <h2 class="text-sm font-semibold tracking-[0.2em] uppercase mb-6" style="color: var(--aw-color-accent);">
+              Projets liés
+            </h2>
+            <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {related.map((r) => (
+                <a href={`/projets/${r.slug}`} class="glass-card !p-5 group cursor-pointer no-underline color-inherit flex flex-col">
+                  <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 p-2 rounded-lg flex items-center justify-center"
+                         style="background: var(--glass-bg-strong); border: 1px solid var(--glass-border);">
+                      <Icon name={r.icon} class="w-5 h-5" style="color: var(--aw-color-accent);" />
+                    </div>
+                    <h3 class="font-bold text-base leading-tight">{r.title}</h3>
+                  </div>
+                  <p class="text-sm text-muted leading-relaxed">{r.tagline}</p>
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <!-- Bottom CTA -->
+      <div class="mt-14 md:mt-20 text-center">
+        <a href="/contact" class="btn-primary group">
+          <span>Discutons de ce projet</span>
+          <Icon name="tabler:arrow-right" class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-0.5" />
+        </a>
+      </div>
+    </div>
+  </article>
+</Layout>
+
+<style is:inline>
+  .color-inherit {
+    color: inherit;
+    text-decoration: none;
+  }
+</style>

@@ -2,30 +2,12 @@ import { getPermalink, getBlogPermalink, getAsset } from './utils/permalinks';
 
 export const headerData = {
   links: [
-    {
-      text: 'Accueil',
-      href: getPermalink('/'),
-    },
-    {
-      text: 'Projets',
-      href: getPermalink('/#projets'),
-    },
-    {
-      text: 'Articles',
-      href: getBlogPermalink(),
-    },
-    {
-      text: 'Boutique',
-      href: getPermalink('/boutique'),
-    },
-    {
-      text: 'À propos',
-      href: getPermalink('/about'),
-    },
-    {
-      text: 'Contact',
-      href: getPermalink('/contact'),
-    },
+    { text: 'Accueil', href: getPermalink('/'), icon: 'tabler:home' },
+    { text: 'Projets', href: getPermalink('/projets'), icon: 'tabler:apps' },
+    { text: 'Articles', href: getBlogPermalink(), icon: 'tabler:notebook' },
+    { text: 'Boutique', href: getPermalink('/boutique'), icon: 'tabler:shopping-bag' },
+    { text: 'À propos', href: getPermalink('/about'), icon: 'tabler:user' },
+    { text: 'Contact', href: getPermalink('/contact'), icon: 'tabler:mail' },
   ],
   actions: [{ text: 'GitHub', href: 'https://github.com/gryynn', target: '_blank', icon: 'tabler:brand-github' }],
 };
@@ -36,7 +18,7 @@ export const footerData = {
       title: 'Site',
       links: [
         { text: 'Accueil', href: getPermalink('/') },
-        { text: 'Projets', href: getPermalink('/#projets') },
+        { text: 'Projets', href: getPermalink('/projets') },
         { text: 'Articles', href: getBlogPermalink() },
         { text: 'Boutique', href: getPermalink('/boutique') },
         { text: 'À propos', href: getPermalink('/about') },

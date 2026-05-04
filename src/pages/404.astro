@@ -1,23 +1,46 @@
 ---
-import Layout from '~/layouts/Layout.astro';
+import { Icon } from 'astro-icon/components';
+import Layout from '~/layouts/PageLayout.astro';
 import { getHomePermalink } from '~/utils/permalinks';
 
-const title = `Error 404`;
+const title = `Page introuvable — Martin Green`;
 ---
 
-<Layout metadata={{ title }}>
-  <section class="flex items-center h-full p-16">
-    <div class="container flex flex-col items-center justify-center px-5 mx-auto my-8">
-      <div class="max-w-md text-center">
-        <h2 class="mb-8 font-bold text-9xl">
-          <span class="sr-only">Error</span>
-          <span class="text-primary">404</span>
-        </h2>
-        <p class="text-3xl font-semibold md:text-3xl">Sorry, we couldn't find this page.</p>
-        <p class="mt-4 mb-8 text-lg text-muted dark:text-slate-400">
-          But dont worry, you can find plenty of other things on our homepage.
-        </p>
-        <a rel="noopener noreferrer" href={getHomePermalink()} class="btn ml-4">Back to homepage</a>
+<Layout metadata={{ title, ignoreTitleTemplate: true }}>
+  <section class="relative not-prose overflow-hidden">
+    <div class="relative max-w-3xl mx-auto px-4 sm:px-6 pt-20 md:pt-40 pb-20 md:pb-32 text-center">
+      <p class="text-sm font-semibold tracking-[0.2em] uppercase mb-4" style="color: var(--aw-color-accent);">
+        Erreur 404
+      </p>
+      <h1 class="font-heading font-bold text-7xl sm:text-8xl md:text-[10rem] leading-none tracking-tighter mb-6 text-gradient">
+        404
+      </h1>
+      <p class="text-xl md:text-2xl font-semibold mb-3">
+        Cette page s'est perdue dans les nuages.
+      </p>
+      <p class="text-base md:text-lg text-muted leading-relaxed mb-10 max-w-xl mx-auto">
+        Le lien que tu suis est cassé, ou la page a été déplacée. Pas de panique — voici quelques portes pour rebondir.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10">
+        <a href={getHomePermalink()} class="btn-primary group">
+          <Icon name="tabler:home" class="w-4 h-4 mr-2" />
+          <span>Retour à l'accueil</span>
+        </a>
+        <a href="/projets" class="btn-secondary group">
+          <span>Voir les projets</span>
+          <Icon name="tabler:arrow-up-right" class="w-4 h-4 ml-2 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+        </a>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-muted">
+        <a href="/about" class="hover:opacity-100 opacity-70 transition-opacity">À propos</a>
+        <span class="opacity-30">·</span>
+        <a href="/articles" class="hover:opacity-100 opacity-70 transition-opacity">Articles</a>
+        <span class="opacity-30">·</span>
+        <a href="/boutique" class="hover:opacity-100 opacity-70 transition-opacity">Boutique</a>
+        <span class="opacity-30">·</span>
+        <a href="/contact" class="hover:opacity-100 opacity-70 transition-opacity">Contact</a>
       </div>
     </div>
   </section>
