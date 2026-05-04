@@ -149,14 +149,14 @@ export const projects: Project[] = [
     tags: ['hardware', 'diy', 'ecologie'],
     stack: ['Hydroponie NFT', 'Arduino', 'ESP32', 'Impression 3D', 'Capteurs'],
     summary:
-      "Tour hydroponique de balcon : deux versions itérées, troisième en cours. Mon terrain d'expérimentation pour comprendre la culture de demain et préparer un projet plus grand.",
+      "Trois itérations de culture hydroponique sur balcon, dont une en cours. Mon terrain d'expérimentation pour comprendre la culture de demain et le locavorisme alimentaire en milieu urbain.",
     description:
-      "Biosphère, c'est ma série d'essais autour de la culture hydroponique sur balcon. Deux prototypes physiques déjà construits (tour NFT + bac salades), avec capteurs, gestion d'eau et impressions 3D maison. L'objectif n'est pas le rendement parfait — c'est de comprendre concrètement ce qu'il faut maîtriser (lumière, nutriments, pH, microclimat) avant de pousser plus loin. Comme tous mes projets, c'est un levier pour explorer le monde de demain en équilibre avec notre environnement et les enjeux globaux. Ce banc d'essai sert de laboratoire pour Greenity, ma vision long terme d'écolieu autonome.",
+      "Biosphère, c'est ma série d'expérimentations autour d'une question simple : comment favoriser le **locavorisme** — qu'il soit alimentaire, organisationnel ou énergétique. Le projet s'inspire du [Lowtech Lab](https://lowtechlab.org/) et notamment de leur science participative *Biosphère* à laquelle j'ai participé en 2024. La première étape, c'est le locavorisme alimentaire — un vrai défi en milieu urbain. D'où l'idée de tester la culture hydroponique, d'abord en intérieur puis sur balcon. Trois itérations à ce jour, chacune avec son système de contrôle des variables (capteurs, gestion d'eau, impressions 3D maison). L'objectif n'est pas le rendement parfait — c'est de comprendre concrètement ce qu'il faut maîtriser (lumière, nutriments, pH, microclimat) avant de pousser plus loin. Comme tous mes projets, c'est un levier pour explorer le monde de demain en équilibre avec notre environnement et les enjeux globaux. Un banc d'essai pour aller plus loin, plus tard.",
     highlights: [
-      "V1 tour NFT — première itération",
-      "V2 bac multi-cultures — design 3D + capteurs",
-      "V3 en cours : intégration domotique Home Assistant",
-      "Banc de test pour le projet Greenity (autonomie alimentaire)",
+      "V1 — Tour NFT en intérieur (avant Lowtech Lab) : première tentative, probablement freinée par une eau trop calcaire",
+      "V2 — Table multi-cultures : inspirée des recherches du Lowtech Lab, irrigation régulière, capteurs, impressions 3D — limitée par un manque de lumière",
+      "V3 — Retour à la tour, sur balcon (en cours) : itération qui corrige les manques des deux premières, intégration domotique",
+      "Question de fond : comment favoriser le locavorisme alimentaire en milieu urbain ?",
       "Toute la documentation dans le vault — itérations, échecs, leçons",
     ],
   },
