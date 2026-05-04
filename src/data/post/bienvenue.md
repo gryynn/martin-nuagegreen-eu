@@ -22,20 +22,20 @@ J'écris cette première note depuis Paris, le 29 avril 2026. Ce site sert plusi
 - **Une boutique** pour les objets que je conçois et fabrique en parallèle (impression 3D, accessoires).
 - **Une trace publique** de mes expérimentations à la frontière entre l'IA et la fabrication physique.
 
-Les articles à venir vont creuser des sujets précis : pourquoi j'ai dégooglisé ma vie, comment j'ai monté un agent IA local avec mémoire long-terme, le pipeline de transcription audio que j'utilise tous les jours, les choix d'architecture de mon app de time-tracking. Pas de calendrier de publication serré — j'écris quand un sujet est mûr dans ma tête.
+Les articles à venir vont creuser des sujets précis : ma démarche de souveraineté numérique sur 2 ans (et ses limites — je ne suis pas hermite), comment j'ai monté un agent IA local avec mémoire long-terme, le pipeline de transcription audio que j'utilise tous les jours, les choix d'architecture de mon app de time-tracking. Pas de calendrier de publication serré — j'écris quand un sujet est mûr dans ma tête.
 
 ## Sur la stack du site
 
 Construit avec [Astro](https://astro.build) (framework statique FOSS), thème dérivé d'[AstroWind](https://github.com/onwidget/astrowind) que je customise progressivement, articles écrits en Markdown directement dans mon vault Obsidian puis synchronisés via Git. Hébergé sur Cloudflare Pages dans un premier temps. Code source [public sur GitHub](https://github.com/gryynn/martin-nuagegreen-eu).
 
-Cohérent avec mon mantra : souveraineté, liberté, puissance. Pas de WordPress géré par un hébergeur, pas de Squarespace, rien de propriétaire. Du HTML, du CSS, du JS, du Markdown — des trucs qui survivent à n'importe quelle évolution de l'industrie.
+Cohérent avec mes valeurs de fond : souveraineté, liberté, environnement. Pas de WordPress géré par un hébergeur, pas de Squarespace, rien de propriétaire. Du HTML, du CSS, du JS, du Markdown — des trucs qui survivent à n'importe quelle évolution de l'industrie.
 
 ## Ce qui suivra
 
 À court terme, quelques articles déjà bien posés dans mes notes :
 
-1. *"J'ai dégooglisé ma vie en 2 ans — bilan technique"* — l'article narratif sur la transition.
-2. *"Architecture homelab — 20+ services Docker derrière tunnel chiffré"* — la doc technique de mon homelab personnel.
+1. *"Souveraineté numérique appliquée — 2 ans de bascule vers l'open-source européen"* — l'article narratif sur la démarche, ses limites et ce qui reste.
+2. *"Architecture homelab — 20+ services Docker auto-hébergés et accès distant chiffré"* — la doc technique de mon homelab.
 3. *"NOMAD — un pipeline audio personnel du vocal au vault Obsidian"* — l'app que j'utilise tous les jours.
 4. *"Hermès — un agent IA local avec mémoire long-terme et RAG sur mon vault"* — l'expérimentation la plus en cours.
 

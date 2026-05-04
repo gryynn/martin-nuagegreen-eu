@@ -8,7 +8,7 @@ metadata:
   title:
     default: Martin Green — Maillon digital ↔ réel
     template: '%s — Martin Green'
-  description: "Chef de projet ingénierie chez Enedis, bricoleur d'IA et de machines 3D. Au croisement du digital et du réel."
+  description: "Chef de projet ingénierie chez Enedis, je teste IA appliquée, agents et fabrication 3D. Au croisement du digital et du réel."
   robots:
     index: true
     follow: true
