@@ -132,7 +132,7 @@ const related = projects
         <h2 class="text-sm font-semibold tracking-[0.2em] uppercase mb-4" style="color: var(--aw-color-accent);">
           À propos
         </h2>
-        <p class="text-lg leading-relaxed" set:html={descriptionHtml} />
+        <p class="text-lg leading-relaxed description-rich" set:html={descriptionHtml} />
       </section>
 
       <!-- Highlights -->
@@ -261,5 +261,24 @@ const related = projects
   .color-inherit {
     color: inherit;
     text-decoration: none;
+  }
+  .description-rich a {
+    color: var(--aw-color-accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    border-radius: 3px;
+    padding: 0 2px;
+    margin: 0 -2px;
+    transition: background 0.2s ease, text-decoration-thickness 0.2s ease;
+    font-weight: 500;
+  }
+  .description-rich a:hover {
+    background: var(--glass-bg);
+    text-decoration-thickness: 2px;
+  }
+  .description-rich strong {
+    color: var(--aw-color-text-heading);
+    font-weight: 600;
   }
 </style>
