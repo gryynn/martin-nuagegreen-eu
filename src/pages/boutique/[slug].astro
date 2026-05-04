@@ -1,0 +1,146 @@
+---
+import { Icon } from 'astro-icon/components';
+import Layout from '~/layouts/PageLayout.astro';
+import Carousel from '~/components/Carousel.astro';
+import { products, type Product } from '~/data/products';
+
+export async function getStaticPaths() {
+  return products.map((product) => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+const metadata = {
+  title: `${product.name} — Boutique Martin Green`,
+  description: product.tagline,
+};
+
+const statusLabel = {
+  available: 'Disponible',
+  preorder: 'Précommande',
+  soon: 'Bientôt',
+  'sold-out': 'Épuisé',
+};
+---
+
+<Layout metadata={metadata}>
+  <article class="relative not-prose overflow-hidden">
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 pt-10 md:pt-32 pb-12 md:pb-24">
+      <!-- Breadcrumb -->
+      <nav class="mb-8 md:mb-10" aria-label="Fil d'Ariane">
+        <a href="/boutique" class="inline-flex items-center gap-1.5 text-sm text-muted hover:text-default transition-colors">
+          <Icon name="tabler:arrow-left" class="w-4 h-4" />
+          Retour à la boutique
+        </a>
+      </nav>
+
+      <!-- Header -->
+      <header class="mb-10 md:mb-14">
+        <div class="flex items-start justify-between gap-4 mb-6">
+          <div class="w-16 h-16 md:w-20 md:h-20 p-4 md:p-5 rounded-2xl flex items-center justify-center shrink-0"
+               style="background: var(--glass-bg-strong); border: 1px solid var(--glass-border);">
+            <Icon name={product.icon} class="w-8 h-8 md:w-10 md:h-10" style="color: var(--aw-color-accent);" />
+          </div>
+          <span
+            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-medium text-sm"
+            style={`background: ${product.status === 'available' ? 'rgba(45,106,79,0.15)' : 'var(--glass-bg)'}; color: ${product.status === 'available' ? 'var(--aw-color-accent)' : 'var(--aw-color-text-muted)'};`}
+          >
+            {product.status === 'available' && <span class="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />}
+            {statusLabel[product.status]}
+          </span>
+        </div>
+
+        <h1 class="font-heading font-bold text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-tighter mb-4">
+          {product.name}
+        </h1>
+        <p class="text-xl md:text-2xl text-muted leading-relaxed">
+          {product.tagline}
+        </p>
+
+        {
+          product.price && (
+            <div class="flex items-baseline gap-3 mt-6">
+              <span class="text-3xl md:text-4xl font-bold font-heading text-gradient">{product.price}</span>
+              {product.priceNote && (
+                <span class="text-sm text-muted opacity-80">{product.priceNote}</span>
+              )}
+            </div>
+          )
+        }
+      </header>
+
+      <!-- Carousel -->
+      {
+        product.images && product.images.length > 0 && (
+          <section class="mb-10 md:mb-14">
+            <Carousel slides={product.images} aspectRatio="4/3" />
+          </section>
+        )
+      }
+
+      <!-- Long description -->
+      <section class="mb-10 md:mb-14">
+        <h2 class="text-sm font-semibold tracking-[0.2em] uppercase mb-4" style="color: var(--aw-color-accent);">
+          Le concept
+        </h2>
+        <p class="text-lg leading-relaxed">{product.longDescription}</p>
+      </section>
+
+      <!-- Features -->
+      <section class="mb-10 md:mb-14">
+        <h2 class="text-sm font-semibold tracking-[0.2em] uppercase mb-5" style="color: var(--aw-color-accent);">
+          Caractéristiques
+        </h2>
+        <ul class="space-y-3">
+          {
+            product.features.map((f) => (
+              <li class="flex items-start gap-3">
+                <Icon name="tabler:check" class="w-5 h-5 mt-0.5 shrink-0" style="color: var(--aw-color-accent);" />
+                <span class="text-base leading-relaxed">{f}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <!-- Specs -->
+      {
+        product.specs && product.specs.length > 0 && (
+          <section class="mb-10 md:mb-14">
+            <h2 class="text-sm font-semibold tracking-[0.2em] uppercase mb-5" style="color: var(--aw-color-accent);">
+              Specs
+            </h2>
+            <div class="glass-card !p-0 overflow-hidden">
+              <dl class="divide-y" style="--tw-divide-opacity: 1; border-color: var(--glass-border);">
+                {product.specs.map((s) => (
+                  <div class="flex items-center justify-between gap-4 px-5 py-4" style="border-bottom: 1px solid var(--glass-border);">
+                    <dt class="text-sm uppercase tracking-wider text-muted">{s.label}</dt>
+                    <dd class="font-medium text-right">{s.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </section>
+        )
+      }
+
+      <!-- CTA -->
+      {
+        product.cta && (
+          <section class="mt-12 md:mt-16 text-center">
+            <a href={product.cta.href} class="btn-primary group" target={product.cta.external ? '_blank' : undefined} rel={product.cta.external ? 'noopener' : undefined}>
+              <span>{product.cta.label}</span>
+              <Icon name="tabler:arrow-right" class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-0.5" />
+            </a>
+          </section>
+        )
+      }
+    </div>
+  </article>
+</Layout>

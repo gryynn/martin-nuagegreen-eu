@@ -1,61 +1,96 @@
 ---
+import { Icon } from 'astro-icon/components';
 import Layout from '~/layouts/PageLayout.astro';
-import HeroText from '~/components/widgets/HeroText.astro';
-import Features from '~/components/widgets/Features.astro';
-import CallToAction from '~/components/widgets/CallToAction.astro';
+import { products } from '~/data/products';
 
 const metadata = {
-  title: 'Boutique',
+  title: 'Boutique — Martin Green',
+};
+
+const statusLabel = {
+  available: 'Disponible',
+  preorder: 'Précommande',
+  soon: 'Bientôt',
+  'sold-out': 'Épuisé',
 };
 ---
 
 <Layout metadata={metadata}>
-  <HeroText
-    tagline="Boutique"
-    title="Quelques objets que je conçois et fabrique"
-    subtitle="Side-projects physiques, en complément du job principal. Production limitée, sur commande, à mes heures perdues."
-  />
+  <section class="relative not-prose overflow-hidden">
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 pt-10 md:pt-32 pb-12 md:pb-20">
+      <div class="text-center max-w-3xl mx-auto mb-10 md:mb-16">
+        <p class="text-sm font-semibold tracking-[0.2em] uppercase mb-4" style="color: var(--aw-color-accent);">
+          Boutique
+        </p>
+        <h1 class="font-heading font-bold text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-tighter mb-4">
+          Objets <span class="text-gradient">conçus &amp; fabriqués</span>.
+        </h1>
+        <p class="text-lg md:text-xl text-muted leading-relaxed">
+          Productions limitées, faites à la main avec mon imprimante 3D. Sur commande, à mes heures.
+        </p>
+      </div>
 
-  <Features
-    title="En vente bientôt"
-    subtitle="Cette section va se remplir progressivement. Si l'un de ces produits t'intéresse, contacte-moi pour précommander ou personnaliser."
-    items={[
-      {
-        title: 'Cighold — accessoire fumeur modulaire',
-        description: 'Système modulaire pour rouler, allumer, gérer ses sessions sans se cramer les doigts. Pour fumeurs de tabac (et autres). Prototype en finalisation, production début 2026.',
-        icon: 'tabler:flame',
-      },
-      {
-        title: 'Trophées MG Design (sur-mesure)',
-        description: 'Trophées personnalisés en impression 3D pour hackathons, événements pro, communautés. Avec Mael Guyon. Voir mgdesign.cloud.',
-        icon: 'tabler:trophy',
-        callToAction: {
-          target: '_blank',
-          text: 'Voir MG Design',
-          href: 'https://mgdesign.cloud',
-        },
-      },
-      {
-        title: 'Pièces & accessoires impression 3D',
-        description: 'Petites pièces sur commande : organisateurs de bureau, supports, kits DIY pour homelab, etc. Vous décrivez, on conçoit, on imprime.',
-        icon: 'tabler:3d-cube-sphere',
-      },
-    ]}
-  />
+      <!-- Products grid -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-2 gap-5 md:gap-6">
+        {
+          products.map((p) => (
+            <a href={`/boutique/${p.slug}`} class="glass-card flex flex-col group cursor-pointer no-underline" style="text-decoration:none;color:inherit;">
+              <div class="flex items-start justify-between mb-4">
+                <div class="w-14 h-14 p-3 rounded-xl flex items-center justify-center"
+                     style="background: var(--glass-bg-strong); border: 1px solid var(--glass-border);">
+                  <Icon name={p.icon} class="w-7 h-7" style="color: var(--aw-color-accent);" />
+                </div>
+                <span
+                  class="text-xs px-2.5 py-1 rounded-full font-medium"
+                  style={`background: ${p.status === 'available' ? 'rgba(45,106,79,0.15)' : 'var(--glass-bg)'}; color: ${p.status === 'available' ? 'var(--aw-color-accent)' : 'var(--aw-color-text-muted)'};`}
+                >
+                  {statusLabel[p.status]}
+                </span>
+              </div>
+              <h2 class="text-2xl font-bold mb-1.5 leading-tight">{p.name}</h2>
+              <p class="text-sm text-muted mb-4 italic">{p.tagline}</p>
+              <p class="text-base leading-relaxed mb-5 flex-1">{p.shortDescription}</p>
+              {p.price && (
+                <div class="text-lg font-semibold mb-4" style="color: var(--aw-color-accent);">
+                  {p.price}
+                </div>
+              )}
+              <div class="flex items-center justify-between text-sm font-medium pt-4 mt-auto"
+                   style="border-top: 1px solid var(--glass-border);">
+                <span class="opacity-70 group-hover:opacity-100 transition-opacity">Voir le produit</span>
+                <Icon name="tabler:arrow-up-right"
+                      class="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                      style="color: var(--aw-color-accent);" />
+              </div>
+            </a>
+          ))
+        }
 
-  <CallToAction
-    actions={[
-      {
-        variant: 'primary',
-        text: 'Me contacter pour un projet sur-mesure',
-        href: '/contact',
-        icon: 'tabler:mail',
-      },
-    ]}
-  >
-    <Fragment slot="title">Une idée d'objet à fabriquer ?</Fragment>
-    <Fragment slot="subtitle">
-      L'impression 3D ouvre un monde de possibles. Si tu cherches quelque chose qui n'existe pas encore, parlons-en.
-    </Fragment>
-  </CallToAction>
+        <!-- Sur-mesure card -->
+        <div class="glass-card flex flex-col">
+          <div class="w-14 h-14 p-3 rounded-xl flex items-center justify-center mb-4"
+               style="background: var(--glass-bg-strong); border: 1px solid var(--glass-border);">
+            <Icon name="tabler:tools" class="w-7 h-7" style="color: var(--aw-color-accent);" />
+          </div>
+          <h2 class="text-2xl font-bold mb-1.5 leading-tight">Sur-mesure</h2>
+          <p class="text-sm text-muted mb-4 italic">Une idée d'objet à fabriquer ?</p>
+          <p class="text-base leading-relaxed mb-5 flex-1">
+            Pièces, accessoires, prototypes, supports DIY pour homelab, organisateurs de bureau — vous décrivez, on conçoit ensemble, j'imprime.
+          </p>
+          <a href="/contact?subject=Sur-mesure" class="btn-secondary mt-auto">
+            <span>Discuter d'un projet</span>
+            <Icon name="tabler:mail" class="w-4 h-4 ml-2" />
+          </a>
+        </div>
+      </div>
+
+      <!-- Footnote -->
+      <div class="mt-12 md:mt-16 text-center text-sm text-muted">
+        <p>
+          Production en France · Délais 5-7 jours · Pour collaborations ou volume :
+          <a href="/contact" class="underline" style="color: var(--aw-color-accent);">contactez-moi</a>.
+        </p>
+      </div>
+    </div>
+  </section>
 </Layout>

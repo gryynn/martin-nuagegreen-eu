@@ -2,7 +2,6 @@
 import { Icon } from 'astro-icon/components';
 import Logo from '~/components/Logo.astro';
 import ToggleTheme from '~/components/common/ToggleTheme.astro';
-import ToggleMenu from '~/components/common/ToggleMenu.astro';
 import Button from '~/components/ui/Button.astro';
 
 import { getHomePermalink } from '~/utils/permalinks';
@@ -17,6 +16,7 @@ interface Link {
 }
 
 interface MenuLink extends Link {
+  icon?: string;
   links?: Array<MenuLink>;
 }
 
@@ -41,7 +41,6 @@ const {
   isFullWidth = false,
   showToggleTheme = false,
   showRssFeed = false,
-  position = 'center',
 } = Astro.props;
 
 const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
@@ -50,59 +49,47 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 <header
   class:list={[
     { sticky: isSticky, relative: !isSticky, dark: isDark },
-    'top-0 z-40 flex-none mx-auto w-full border-b border-gray-50/0 transition-[opacity] ease-in-out',
+    'top-0 z-40 flex-none mx-auto w-full transition-[opacity] ease-in-out',
   ]}
   {...isSticky ? { 'data-aw-sticky-header': true } : {}}
   {...id ? { id } : {}}
 >
-  <div class="absolute inset-0"></div>
   <div
     class:list={[
-      'relative text-default py-3 px-3 md:px-6 mx-auto w-full',
-      {
-        'md:flex md:justify-between': position !== 'center',
-      },
-      {
-        'md:grid md:grid-cols-3 md:items-center': position === 'center',
-      },
-      {
-        'max-w-7xl': !isFullWidth,
-      },
+      'nav-bar relative flex items-center justify-between gap-3 py-3 px-4 md:px-6 mx-auto',
+      { 'max-w-7xl': !isFullWidth },
     ]}
   >
-    <div class:list={[{ 'mr-auto rtl:mr-0 rtl:ml-auto': position === 'right' }, 'flex justify-between']}>
-      <a class="flex items-center" href={getHomePermalink()}>
-        <Logo />
-      </a>
-      <div class="flex items-center md:hidden">
-        <ToggleMenu />
-      </div>
-    </div>
-    <nav
-      class="items-center w-full md:w-auto hidden md:flex md:mx-5 text-default overflow-y-auto overflow-x-hidden md:overflow-y-visible md:overflow-x-auto md:justify-self-center"
+    <!-- Logo -->
+    <a class="flex items-center shrink-0" href={getHomePermalink()} aria-label="Accueil">
+      <Logo />
+    </a>
+
+    <!-- Desktop nav (div + role to avoid AstroWind's #header nav click hijack) -->
+    <div
+      role="navigation"
+      class="hidden md:flex items-center justify-center text-default flex-1"
       aria-label="Main navigation"
     >
-      <ul
-        class="flex flex-col md:flex-row md:self-center w-full md:w-auto text-xl md:text-[0.9375rem] tracking-[0.01rem] font-medium md:justify-center"
-      >
+      <ul class="flex flex-row gap-1 text-[0.9375rem] font-medium">
         {
-          links.map(({ text, href, links }) => (
-            <li class={links?.length ? 'dropdown' : ''}>
-              {links?.length ? (
+          links.map(({ text, href, links: subLinks }) => (
+            <li class={subLinks?.length ? 'dropdown relative' : ''}>
+              {subLinks?.length ? (
                 <>
                   <button
                     type="button"
-                    class="hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap"
+                    class="px-3 py-2 rounded-full hover:bg-[var(--glass-bg)] flex items-center whitespace-nowrap transition-colors"
                   >
                     {text}{' '}
-                    <Icon name="tabler:chevron-down" class="w-3.5 h-3.5 ml-0.5 rtl:ml-0 rtl:mr-0.5 hidden md:inline" />
+                    <Icon name="tabler:chevron-down" class="w-3.5 h-3.5 ml-0.5" />
                   </button>
-                  <ul class="dropdown-menu md:backdrop-blur-md dark:md:bg-dark rounded md:absolute pl-4 md:pl-0 md:hidden font-medium md:bg-white/90 md:min-w-[200px] drop-shadow-xl">
-                    {links.map(({ text: text2, href: href2 }) => (
+                  <ul class="dropdown-menu hidden absolute top-full left-0 mt-2 min-w-[200px] glass rounded-2xl py-2 px-1">
+                    {subLinks.map(({ text: text2, href: href2 }) => (
                       <li>
                         <a
                           class:list={[
-                            'first:rounded-t last:rounded-b md:hover:bg-gray-100 hover:text-link dark:hover:text-white dark:hover:bg-gray-700 py-2 px-5 block whitespace-no-wrap',
+                            'block py-2 px-4 rounded-xl hover:bg-[var(--glass-bg-strong)] whitespace-nowrap transition-colors',
                             { 'aw-link-active': href2 === currentPath },
                           ]}
                           href={href2}
@@ -116,7 +103,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
               ) : (
                 <a
                   class:list={[
-                    'hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap',
+                    'px-3 py-2 rounded-full hover:bg-[var(--glass-bg)] whitespace-nowrap transition-colors',
                     { 'aw-link-active': href === currentPath },
                   ]}
                   href={href}
@@ -128,40 +115,200 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
           ))
         }
       </ul>
-    </nav>
-    <div
-      class:list={[
-        { 'ml-auto rtl:ml-0 rtl:mr-auto': position === 'left' },
-        'hidden md:self-center md:flex items-center md:mb-0 fixed w-full md:w-auto md:static justify-end left-0 rtl:left-auto rtl:right-0 bottom-0 p-3 md:p-0 md:justify-self-end',
-      ]}
-    >
-      <div class="items-center flex justify-between w-full md:w-auto">
-        <div class="flex">
-          {showToggleTheme && <ToggleTheme iconClass="w-6 h-6 md:w-5 md:h-5 md:inline-block" />}
-          {
-            showRssFeed && (
-              <a
-                class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
-                aria-label="RSS Feed"
-                href={getAsset('/rss.xml')}
-              >
-                <Icon name="tabler:rss" class="w-5 h-5" />
-              </a>
-            )
-          }
-        </div>
-        {
-          actions?.length ? (
-            <span class="ml-4 rtl:ml-0 rtl:mr-4">
-              {actions.map((btnProps) => (
-                <Button {...btnProps} class="ml-2 py-2.5 px-5.5 md:px-6 font-semibold shadow-none text-sm w-auto" />
-              ))}
-            </span>
-          ) : (
-            ''
-          )
-        }
-      </div>
+    </div>
+
+    <!-- Right cluster: theme toggle, rss, actions, mobile hamburger -->
+    <div class="flex items-center gap-1 shrink-0">
+      {showToggleTheme && (
+        <ToggleTheme iconClass="w-5 h-5 inline-block" class="p-2 rounded-full hover:bg-[var(--glass-bg)] transition-colors cursor-pointer" />
+      )}
+      {showRssFeed && (
+        <a
+          class="hidden md:inline-flex p-2 rounded-full hover:bg-[var(--glass-bg)] transition-colors items-center"
+          aria-label="RSS Feed"
+          href={getAsset('/rss.xml')}
+        >
+          <Icon name="tabler:rss" class="w-5 h-5" />
+        </a>
+      )}
+      {actions?.length > 0 && (
+        <span class="hidden md:inline-flex ml-2">
+          {actions.map((btnProps) => (
+            <Button {...btnProps} class="py-2 px-4 text-sm font-semibold" />
+          ))}
+        </span>
+      )}
+      <button
+        type="button"
+        data-mg-menu-toggle
+        aria-label="Ouvrir le menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        class="md:hidden flex flex-col h-11 w-11 rounded-full justify-center items-center cursor-pointer group hover:bg-[var(--glass-bg)] transition-colors"
+      >
+        <span class="sr-only">Menu</span>
+        <span aria-hidden="true" class="h-0.5 w-6 my-1 rounded-full bg-current transition-all duration-200 ease group-[.expanded]:rotate-45 group-[.expanded]:translate-y-2.5"></span>
+        <span aria-hidden="true" class="h-0.5 w-6 my-1 rounded-full bg-current transition-all duration-200 ease group-[.expanded]:opacity-0"></span>
+        <span aria-hidden="true" class="h-0.5 w-6 my-1 rounded-full bg-current transition-all duration-200 ease group-[.expanded]:-rotate-45 group-[.expanded]:-translate-y-2.5"></span>
+      </button>
     </div>
   </div>
+
+  <!-- Backdrop dim (mobile only, when menu open) -->
+  <div
+    id="mobile-menu-backdrop"
+    class="md:hidden fixed inset-0 bg-black/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 z-30"
+    aria-hidden="true"
+  ></div>
+
+  <!-- Mobile expanded menu (glass panel) — absolute so it doesn't inflate header height -->
+  <div
+    id="mobile-menu"
+    class="md:hidden absolute left-3 right-3 top-full mt-2 rounded-3xl glass-strong overflow-hidden opacity-0 -translate-y-1 pointer-events-none transition-[opacity,transform] duration-200 ease-out z-40"
+    aria-hidden="true"
+  >
+    <ul class="flex flex-col py-2 px-2 text-base font-medium">
+      {
+        links.map(({ text, href, icon }) => (
+          <li>
+            <a
+              class:list={[
+                'flex items-center gap-3 py-3.5 px-4 rounded-2xl hover:bg-[var(--glass-bg-strong)] active:bg-[var(--glass-bg-strong)] transition-colors min-h-[52px]',
+                { 'aw-link-active bg-[var(--glass-bg)]': href === currentPath },
+              ]}
+              href={href}
+            >
+              {icon && (
+                <Icon name={icon} class="w-5 h-5 opacity-70 shrink-0" />
+              )}
+              <span class="flex-1">{text}</span>
+              <Icon name="tabler:chevron-right" class="w-4 h-4 opacity-30" />
+            </a>
+          </li>
+        ))
+      }
+      {actions?.length > 0 && (
+        <li class="pt-3 px-2 pb-1 border-t mt-2" style="border-color: var(--glass-border);">
+          {actions.map((btnProps) => (
+            <Button {...btnProps} class="w-full justify-center mt-3" />
+          ))}
+        </li>
+      )}
+    </ul>
+  </div>
 </header>
+
+<script is:inline>
+  // Mobile menu — event delegation on document (survives Astro View Transitions)
+  (function () {
+    if (window.__mgMobileMenuBound) return;
+    window.__mgMobileMenuBound = true;
+
+    const HIDDEN_CLASSES = ['opacity-0', '-translate-y-1', 'pointer-events-none'];
+
+    function getEls() {
+      return {
+        toggle: document.querySelector('[data-mg-menu-toggle]'),
+        menu: document.getElementById('mobile-menu'),
+        backdrop: document.getElementById('mobile-menu-backdrop'),
+      };
+    }
+
+    function isOpen(menu) {
+      return menu && !menu.classList.contains('opacity-0');
+    }
+
+    function openMenu() {
+      const { toggle, menu, backdrop } = getEls();
+      if (!menu) return;
+      toggle?.classList.add('expanded');
+      menu.classList.remove(...HIDDEN_CLASSES);
+      menu.setAttribute('aria-hidden', 'false');
+      if (backdrop) {
+        backdrop.classList.remove('opacity-0', 'pointer-events-none');
+        backdrop.classList.add('opacity-100');
+      }
+      // Don't lock body scroll — backdrop already prevents accidental clicks,
+      // and toggling overflow caused visible reflow / pill shrink on close
+    }
+
+    function closeMenu(opts) {
+      const instant = opts && opts.instant;
+      const { toggle, menu, backdrop } = getEls();
+      if (!menu) return;
+      toggle?.classList.remove('expanded');
+
+      if (instant) {
+        // Disable transition for one frame to hide instantly (no flicker during nav)
+        const prev = menu.style.transition;
+        menu.style.transition = 'none';
+        menu.classList.add(...HIDDEN_CLASSES);
+        // Force reflow then restore
+        void menu.offsetWidth;
+        menu.style.transition = prev;
+      } else {
+        menu.classList.add(...HIDDEN_CLASSES);
+      }
+
+      menu.setAttribute('aria-hidden', 'true');
+      if (backdrop) {
+        if (instant) {
+          const prev = backdrop.style.transition;
+          backdrop.style.transition = 'none';
+          backdrop.classList.add('opacity-0', 'pointer-events-none');
+          backdrop.classList.remove('opacity-100');
+          void backdrop.offsetWidth;
+          backdrop.style.transition = prev;
+        } else {
+          backdrop.classList.add('opacity-0', 'pointer-events-none');
+          backdrop.classList.remove('opacity-100');
+        }
+      }
+    }
+
+    // Single delegated click handler — survives DOM swaps
+    document.addEventListener('click', (e) => {
+      const target = e.target;
+      if (!(target instanceof Element)) return;
+
+      const toggleBtn = target.closest('[data-mg-menu-toggle]');
+      if (toggleBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const { menu } = getEls();
+        if (isOpen(menu)) closeMenu();
+        else openMenu();
+        return;
+      }
+
+      // Click on backdrop = close (with animation)
+      if (target.closest('#mobile-menu-backdrop')) {
+        closeMenu();
+        return;
+      }
+
+      // Click on link inside menu = close INSTANTLY (no animation during nav)
+      if (target.closest('#mobile-menu a')) {
+        closeMenu({ instant: true });
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMenu();
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768) closeMenu({ instant: true });
+    });
+
+    // After view transition or back-forward, ensure clean state
+    function reset() {
+      closeMenu({ instant: true });
+    }
+    document.addEventListener('astro:after-swap', reset);
+    document.addEventListener('astro:page-load', reset);
+    window.addEventListener('pageshow', reset);
+    // Same-page hash navigation
+    window.addEventListener('hashchange', reset);
+  })();
+</script>

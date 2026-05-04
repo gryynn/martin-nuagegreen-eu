@@ -11,6 +11,7 @@ import Metadata from '~/components/common/Metadata.astro';
 import SiteVerification from '~/components/common/SiteVerification.astro';
 import Analytics from '~/components/common/Analytics.astro';
 import BasicScripts from '~/components/common/BasicScripts.astro';
+import PageProgress from '~/components/PageProgress.astro';
 
 // Comment the line below to disable View Transitions
 import { ClientRouter } from 'astro:transitions';
@@ -40,7 +41,20 @@ const { language, textDirection } = I18N;
     <ClientRouter fallback="swap" />
   </head>
 
-  <body class="antialiased text-default bg-page tracking-tight">
+  <body class="antialiased text-default bg-page tracking-tight relative overflow-x-hidden">
+    <PageProgress />
+
+    <div class="aurora" aria-hidden="true">
+      <div class="cloud cloud-1"></div>
+      <div class="cloud cloud-2"></div>
+      <div class="cloud cloud-3"></div>
+      <div class="cloud cloud-4"></div>
+      <div class="cloud cloud-5"></div>
+      <div class="cloud cloud-6"></div>
+    </div>
+    <div class="cloud-horizon" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+
     <slot />
 
     <BasicScripts />
