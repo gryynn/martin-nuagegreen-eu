@@ -149,9 +149,9 @@ export const projects: Project[] = [
     tags: ['hardware', 'diy', 'ecologie'],
     stack: ['Hydroponie NFT', 'Arduino', 'ESP32', 'Impression 3D', 'Capteurs'],
     summary:
-      "Tour hydroponique de balcon : deux versions itérées, troisième en cours. Le terrain d'expérimentation pour comprendre la culture indoor et préparer un projet plus grand.",
+      "Tour hydroponique de balcon : deux versions itérées, troisième en cours. Mon terrain d'expérimentation pour comprendre la culture de demain et préparer un projet plus grand.",
     description:
-      "Biosphère, c'est ma série d'essais autour de la culture hydroponique sur balcon. Deux prototypes physiques déjà construits (tour NFT + bac salades), avec capteurs, gestion d'eau et impressions 3D maison. L'objectif n'est pas le rendement parfait — c'est de comprendre concrètement ce qu'il faut maîtriser (lumière, nutriments, pH, microclimat) avant de pousser plus loin. Le projet sert de laboratoire pour Greenity, ma vision long terme d'écolieu autonome.",
+      "Biosphère, c'est ma série d'essais autour de la culture hydroponique sur balcon. Deux prototypes physiques déjà construits (tour NFT + bac salades), avec capteurs, gestion d'eau et impressions 3D maison. L'objectif n'est pas le rendement parfait — c'est de comprendre concrètement ce qu'il faut maîtriser (lumière, nutriments, pH, microclimat) avant de pousser plus loin. Comme tous mes projets, c'est un levier pour explorer le monde de demain en équilibre avec notre environnement et les enjeux globaux. Ce banc d'essai sert de laboratoire pour Greenity, ma vision long terme d'écolieu autonome.",
     highlights: [
       "V1 tour NFT — première itération",
       "V2 bac multi-cultures — design 3D + capteurs",
