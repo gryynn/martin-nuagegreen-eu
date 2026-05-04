@@ -28,10 +28,11 @@ export const footerData = {
     {
       title: 'Projets',
       links: [
-        { text: 'Homelab GREEN-LAB', href: getPermalink('/projets/homelab') },
+        { text: 'Homelab', href: getPermalink('/projets/homelab') },
         { text: 'NOMAD', href: getPermalink('/projets/nomad') },
         { text: 'Mirai', href: getPermalink('/projets/mirai') },
-        { text: 'Hermès AI Stack', href: getPermalink('/projets/hermes') },
+        { text: 'Hermès AI Stack', href: getPermalink('/projets/hermes-ai-stack') },
+        { text: 'Biosphère', href: getPermalink('/projets/biosphere') },
         { text: 'MG Design', href: 'https://mgdesign.cloud', target: '_blank' },
       ],
     },
