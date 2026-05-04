@@ -1,10 +1,36 @@
 ---
-import favIcon from '~/assets/favicons/favicon.ico';
-import favIconSvg from '~/assets/favicons/favicon.svg';
-import appleTouchIcon from '~/assets/favicons/apple-touch-icon.png';
+// Cloud favicon — vert forêt (light) / mint (dark), swap auto avec theme toggle
 ---
 
-<link rel="shortcut icon" href={favIcon} />
-<link rel="icon" type="image/svg+xml" href={favIconSvg.src} />
-<link rel="mask-icon" href={favIconSvg.src} color="#8D46E7" />
-<link rel="apple-touch-icon" sizes="180x180" href={appleTouchIcon.src} />
+<!-- Default = light cloud (sera remplacé dynamiquement par JS si dark mode) -->
+<link rel="icon" type="image/svg+xml" href="/favicon-light.svg" id="mg-favicon" />
+<link rel="mask-icon" href="/favicon-light.svg" color="#1B4332" />
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon-light.svg" />
+
+<script is:inline>
+  (function () {
+    if (window.__mgFaviconSync) return;
+    window.__mgFaviconSync = true;
+
+    function updateFavicon() {
+      const isDark = document.documentElement.classList.contains('dark');
+      const link = document.getElementById('mg-favicon');
+      if (!link) return;
+      const href = isDark ? '/favicon-dark.svg' : '/favicon-light.svg';
+      if (!link.href.endsWith(href)) {
+        link.href = href;
+      }
+    }
+
+    // Initial sync
+    updateFavicon();
+
+    // Watch for class changes on <html> (dark/light toggle)
+    const observer = new MutationObserver(updateFavicon);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+    // Re-sync after Astro view transitions
+    document.addEventListener('astro:after-swap', updateFavicon);
+    document.addEventListener('astro:page-load', updateFavicon);
+  })();
+</script>
