@@ -54,5 +54,12 @@ export const footerData = {
   ],
   footNote: `
     <span class="opacity-70">Site fait par Martin Green avec <a class="text-primary underline" href="https://astro.build" target="_blank">Astro</a> + un peu d'aide IA. Code <a class="text-primary underline" href="https://github.com/gryynn/martin-nuagegreen-eu" target="_blank">sur GitHub</a>.</span>
+    <span class="opacity-50 text-xs ml-2">·
+      <a class="hover:opacity-100 transition-opacity"
+         href="https://github.com/gryynn/martin-nuagegreen-eu/commit/${import.meta.env.PUBLIC_BUILD_COMMIT}"
+         target="_blank"
+         rel="noopener">build ${import.meta.env.PUBLIC_BUILD_COMMIT}</a>
+      · ${import.meta.env.PUBLIC_BUILD_DATE}
+    </span>
   `,
 };
