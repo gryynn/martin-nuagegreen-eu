@@ -205,7 +205,7 @@ export const projects: Project[] = [
     summary:
       "Plus d'une dizaine de schémas qui consolident mes outils du quotidien (tâches, capteurs, agenda) pour que mon agent IA puisse en faire quelque chose d'utile.",
     description:
-      "PSM (Personal System Management) est ma façon de relier les outils que j'utilise déjà — TickTick, agenda, capteurs santé Android, time-tracking via Mirai — dans une base unifiée. L'idée n'est pas de tout mesurer, c'est de réduire la friction quand je veux faire un bilan, demander un coaching à mon agent IA, ou repérer un pattern. Les bilans hebdomadaires sortent automatiquement, le reste est à la demande.",
+      "PSM (Personal System Management) est ma façon de relier les outils que j'utilise déjà — TickTick, agenda, capteurs santé via smartwatch + Android, time-tracking via [Mirai](/projets/mirai) — dans une base unifiée. L'idée n'est pas de tout mesurer, c'est de donner à mon [agent IA personnel auto-hébergé](/projets/hermes-ai-stack) le contexte qu'il faut pour rester pertinent au quotidien : faire un bilan, proposer un coaching, repérer un pattern. Les bilans hebdomadaires sortent automatiquement, le reste est à la demande.",
     highlights: [
       "Plus d'une dizaine de schémas Supabase en production",
       "Bilans hebdomadaires automatisés (PERMA-V)",
