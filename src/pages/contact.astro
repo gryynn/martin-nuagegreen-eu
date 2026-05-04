@@ -1,4 +1,5 @@
 ---
+import { Icon } from 'astro-icon/components';
 import Layout from '~/layouts/PageLayout.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
 import Features2 from '~/components/widgets/Features2.astro';
@@ -6,6 +7,43 @@ import Features2 from '~/components/widgets/Features2.astro';
 const metadata = {
   title: 'Contact',
 };
+
+interface ContactCard {
+  title: string;
+  description: string;
+  icon: string;
+  href?: string;
+  external?: boolean;
+}
+
+const contactCards: ContactCard[] = [
+  {
+    title: 'Email',
+    description: 'contact@nuagegreen.eu',
+    icon: 'tabler:mail',
+    href: 'mailto:contact@nuagegreen.eu',
+  },
+  {
+    title: 'LinkedIn',
+    description: 'linkedin.com/in/martingreenfrance',
+    icon: 'tabler:brand-linkedin',
+    href: 'https://www.linkedin.com/in/martingreenfrance',
+    external: true,
+  },
+  {
+    title: 'GitHub',
+    description: 'github.com/gryynn',
+    icon: 'tabler:brand-github',
+    href: 'https://github.com/gryynn',
+    external: true,
+  },
+  {
+    title: 'Localisation',
+    description: 'Paris, France',
+    icon: 'tabler:map-pin',
+    // [TODO] href vers une carte interactive (Leaflet / plugin Obsidian map) — Phase 3
+  },
+];
 ---
 
 <Layout metadata={metadata}>
@@ -15,32 +53,55 @@ const metadata = {
     subtitle="Le plus simple : email ou LinkedIn. Je réponds en général dans les 48h."
   />
 
-  <Features2
-    title="Où me joindre"
-    columns={2}
-    items={[
-      {
-        title: 'Email',
-        description: 'contact@nuagegreen.eu',
-        icon: 'tabler:mail',
-      },
-      {
-        title: 'LinkedIn',
-        description: 'linkedin.com/in/martingreenfrance',
-        icon: 'tabler:brand-linkedin',
-      },
-      {
-        title: 'GitHub',
-        description: 'github.com/gryynn',
-        icon: 'tabler:brand-github',
-      },
-      {
-        title: 'Localisation',
-        description: 'Paris, France',
-        icon: 'tabler:map-pin',
-      },
-    ]}
-  />
+  <!-- Cards de contact cliquables -->
+  <section class="relative not-prose">
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
+      <h2 class="font-heading font-bold text-3xl md:text-4xl tracking-tighter text-center mb-10">
+        Où me joindre
+      </h2>
+      <div class="grid sm:grid-cols-2 gap-5 md:gap-6 max-w-4xl mx-auto">
+        {
+          contactCards.map((c) => {
+            const Tag = c.href ? 'a' : 'div';
+            const linkProps = c.href
+              ? {
+                  href: c.href,
+                  target: c.external ? '_blank' : undefined,
+                  rel: c.external ? 'noopener noreferrer' : undefined,
+                }
+              : {};
+            return (
+              <Tag
+                {...linkProps}
+                class={`glass-card flex flex-col group ${c.href ? 'cursor-pointer no-underline color-inherit' : ''}`}
+              >
+                <div
+                  class="w-14 h-14 p-3 rounded-xl flex items-center justify-center mb-5"
+                  style="background: var(--glass-bg-strong); border: 1px solid var(--glass-border);"
+                >
+                  <Icon name={c.icon} class="w-7 h-7" style="color: var(--aw-color-accent);" />
+                </div>
+                <h3 class="text-xl font-bold mb-1 leading-tight">{c.title}</h3>
+                <p class="text-base text-muted leading-relaxed">{c.description}</p>
+                {c.href && (
+                  <div
+                    class="flex items-center gap-1.5 text-sm font-medium mt-4 opacity-60 group-hover:opacity-100 transition-opacity"
+                    style="color: var(--aw-color-accent);"
+                  >
+                    <span>Ouvrir</span>
+                    <Icon
+                      name="tabler:arrow-up-right"
+                      class="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    />
+                  </div>
+                )}
+              </Tag>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
 
   <Features2
     title="Pour quoi me contacter ?"
@@ -63,9 +124,16 @@ const metadata = {
       },
       {
         title: 'MG Design (impression 3D)',
-        description: 'Pour des objets sur-mesure (trophées, prototypes), passe par mgdesign.cloud avec Mael Guyon.',
+        description: 'Pour des objets sur-mesure (trophées, prototypes), passe par mgdesign.cloud avec mon associé.',
         icon: 'tabler:3d-cube-sphere',
       },
     ]}
   />
 </Layout>
+
+<style is:inline>
+  .color-inherit {
+    color: inherit;
+    text-decoration: none;
+  }
+</style>
