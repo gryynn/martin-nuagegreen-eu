@@ -47,42 +47,43 @@ export const projects: Project[] = [
     status: 'live',
     year: '2024 →',
     tags: ['infra', 'self-hosting', 'docker'],
-    stack: ['Docker', 'Traefik', 'Linux', 'Nextcloud', 'Supabase', 'n8n'],
+    stack: ['Docker', 'Traefik', 'Linux', 'Nextcloud', 'Supabase', 'n8n', 'Tailscale', 'Cloudflare'],
     summary:
-      "20+ services Docker auto-hébergés sur ma flotte de machines, tout passe par un reverse proxy avec TLS auto. Mes données et mes outils, chez moi.",
+      "Mon cloud personnel : photos, notes, base de données, agent IA et automatisations tournent sur des machines que j'administre moi-même, accessibles depuis partout sans dépendre des GAFAM.",
     description:
-      "Mon homelab est un Mini-PC Linux qui héberge la plupart de mes outils du quotidien : stockage de fichiers, base de données, automatisations, agent IA, instance Obsidian. Une vingtaine de services accessibles depuis n'importe lequel de mes appareils, sans passer par les clouds des géants. C'est mon laboratoire pour tester ce qu'on peut faire quand on récupère la main sur sa stack.",
+      "Le homelab est mon infrastructure pivot : un mini-PC Linux et quelques machines satellites qui hébergent une vingtaine de services. C'est ce qui me permet d'avoir un Nextcloud à la place de Google Drive, une base de données qui me sert à moi seul, un agent IA qui tourne en local, et toutes mes automatisations centralisées — le tout accessible depuis mon téléphone ou un PC distant via un réseau privé chiffré. C'est aussi mon banc d'essai pour explorer ce que devient un quotidien numérique quand on reprend la main sur sa stack.",
     highlights: [
-      "20+ services Docker en production continue",
-      "Reverse proxy Traefik + auto-renouvellement TLS",
-      "Accès distant sans port ouvert (tunnel chiffré)",
-      "Backups vers stockage externe + snapshots locaux",
-      "Documentation vivante dans le vault Obsidian",
+      "Une vingtaine de services en production continue : cloud perso, base de données, agent IA, domotique",
+      "HTTPS automatique sur tous les services internes",
+      "Accès distant sans port ouvert sur internet (réseau privé chiffré)",
+      "Sauvegardes externes + snapshots locaux automatisés",
+      "Documentation vivante : chaque service a sa note dédiée dans un vault Obsidian",
     ],
     metrics: [
-      { label: 'Services Docker', value: '20+' },
+      { label: 'Services en prod', value: '20+' },
       { label: 'Uptime', value: '99%+' },
     ],
   },
   {
     slug: 'nomad',
     title: 'NOMAD',
-    tagline: 'Capture audio multi-sources → vault Obsidian',
+    tagline: 'Capter ses idées à la voix, sans perdre le fil',
     icon: 'tabler:microphone-2',
     status: 'live',
     year: '2025 →',
     tags: ['ai', 'audio', 'pwa', 'data'],
-    stack: ['React', 'TypeScript', 'Python', 'Whisper', 'Supabase', 'PostgreSQL'],
+    stack: ['React', 'TypeScript', 'Flutter', 'Python', 'Whisper', 'Groq', 'Supabase'],
     summary:
-      "PWA de capture audio (dictaphone, conversations, podcasts) avec pipeline de transcription automatique et atomisation en notes Obsidian.",
+      "Application web et mobile pour enregistrer une réflexion à la volée — un voice memo, une conversation, un podcast — et la retrouver transcrite, découpée et reliée automatiquement à mes notes existantes.",
     description:
-      "NOMAD est ma solution pour capturer la pensée à l'oral et la transformer en notes structurées sans friction. PWA installable sur mobile qui enregistre l'audio, l'envoie sur ma base, déclenche un pipeline Whisper pour la transcription, puis un agent qui découpe la transcription en notes atomiques cross-linkées dans le vault Obsidian.",
+      "NOMAD répond à une frustration concrète : les meilleures idées arrivent en marchant, en discutant, en conduisant — et le clavier n'est jamais là au bon moment. C'est une application installable sur téléphone qui démarre un enregistrement en un geste, transcrit l'audio dès qu'il y a du réseau, puis fait passer le texte par un agent IA qui le découpe en notes atomiques, classées et reliées dans mon vault Obsidian. Le travail de classement, qui prend habituellement plus de temps que la capture elle-même, est délégué à la machine. La version open-source publique est en préparation pour que d'autres puissent l'auto-héberger.",
     highlights: [
-      "PWA installable, fonctionne offline-first",
-      "Pipeline async : enregistrement → upload → transcription → atomisation",
-      "Plusieurs centaines de sessions transcrites en production",
-      "Politiques de sécurité multi-utilisateurs en place",
-      "Intégration vault Obsidian via cross-linking automatique",
+      "S'installe comme une vraie app sur mobile, démarre en un geste",
+      "Du dictaphone aux notes structurées sans intervention manuelle",
+      "Fonctionne hors réseau, synchronise quand c'est possible",
+      "Multi-utilisateur : chaque user voit uniquement ses propres données",
+      "Les notes générées se relient automatiquement aux notes existantes",
+      "Plusieurs centaines de sessions transcrites depuis le début de l'usage",
     ],
     metrics: [
       { label: 'Sessions transcrites', value: '200+' },
@@ -91,23 +92,23 @@ export const projects: Project[] = [
   {
     slug: 'mirai',
     title: 'Mirai',
-    tagline: 'Time-tracking fractal offline-first',
+    tagline: 'Suivre son temps autrement, sans cases imposées',
     icon: 'tabler:device-mobile',
     status: 'live',
     year: '2024 →',
     tags: ['mobile', 'flutter', 'data'],
     stack: ['Flutter', 'Dart', 'Drift', 'SQLite', 'Supabase', 'Provider'],
     summary:
-      "App Flutter de suivi du temps par tags fractals. Offline-first avec sync cloud, architecture documentée par 16 ADRs. Live sur mon mobile depuis plus d'un an.",
+      "Application mobile de suivi du temps construite autour d'une idée simple : les vraies activités humaines ne rentrent pas dans des cases prédéfinies. Mirai laisse construire son propre arbre d'étiquettes au fil de l'usage, et observer ses habitudes sans jugement.",
     description:
-      "Mirai est mon outil quotidien de capture du temps et des activités. Architecture par tags fractals (pas de catégories rigides — un arbre hiérarchique libre), 7 types d'items composables (time, value, link, meta, note, date, form), et concept d'items \"ghost\" (reflets UI purs). Offline-first sur SQLite via Drift, sync cloud avec stratégie last-write-wins. 16 ADRs documentent toutes les décisions architecturales.",
+      "Mirai est l'outil que j'utilise tous les jours depuis plus d'un an pour comprendre où passe mon temps et ce que je fais vraiment de mes journées. Plutôt que d'imposer des catégories (« travail », « sport », « loisir »…), l'app propose un arbre d'étiquettes 100% libre que chaque utilisateur fait grandir au fil de l'usage. Les données restent sur le téléphone (l'app marche sans réseau), et se synchronisent silencieusement quand le wifi revient. Toutes les décisions d'architecture sont documentées dans un registre interne — l'app est conçue pour durer, pas pour être jetée à la prochaine refonte. La version open-source publique sort bientôt sur GitHub.",
     highlights: [
-      "Tags fractals : zéro catégorie figée, arbre libre",
-      "7 types d'items génériques (LEGO de tracking)",
-      "Offline-first : SQLite source de vérité",
-      "Sync bidirectionnelle, last-write-wins",
-      "16 ADRs documentés en base",
-      "Slider, link, meta, ghost — primitives composables",
+      "Arbre d'étiquettes 100% libre — aucune catégorie imposée",
+      "Plusieurs formats de suivi composables (temps, intensité, notes, liens)",
+      "Fonctionne sans réseau, sync silencieuse au retour du wifi",
+      "Plus d'un an d'usage perso continu — testé en conditions réelles",
+      "Architecture entièrement documentée (16 décisions consignées)",
+      "Pensée pour scaler proprement, pas pour être jetée",
     ],
     metrics: [
       { label: 'ADRs documentés', value: '16' },
@@ -124,19 +125,19 @@ export const projects: Project[] = [
     tags: ['ai', 'agent', 'self-hosting'],
     stack: ['Kimi K2', 'OpenRouter', 'Qdrant', 'MCP', 'Docker', 'Python'],
     summary:
-      "Agent IA personnel auto-hébergé avec mémoire cross-session, RAG sur le vault et serveurs MCP (TickTick, Home Assistant, base perso).",
+      "Un assistant IA personnel qui tourne chez moi, garde la mémoire de nos échanges et a accès direct à mes outils du quotidien (notes, tâches, domotique). Mon terrain pour explorer ce qu'un agent local bien outillé peut vraiment faire.",
     description:
-      "Hermès est mon agent IA personnel, container Docker tournant sur le homelab. Modèle Kimi K2 via OpenRouter (avec fallback Claude Haiku), RAG sur le vault Obsidian via Qdrant, et accès aux outils du quotidien via MCPs : TickTick (tâches), Home Assistant (domotique), API REST de ma base perso. Mémoire long-terme avec rotator de sessions, indexées pour rappel cross-session. C'est mon terrain de test pour comprendre ce qu'un agent local bien outillé peut vraiment faire au quotidien.",
+      "Hermès est mon agent IA personnel, conteneurisé sur le homelab. Contrairement aux assistants généralistes qui oublient tout entre deux conversations, Hermès se souvient de nos échanges passés, sait retrouver une idée évoquée six mois plus tôt dans mes notes, et peut agir sur mes outils : ajouter une tâche dans mon gestionnaire, allumer une lumière, requêter ma base de données personnelle. C'est aussi un banc d'essai pour évaluer où en sont les agents IA en 2026 — et jusqu'où on peut leur faire confiance pour des actions concrètes.",
     highlights: [
-      "Kimi K2 via OpenRouter, fallback Anthropic",
-      "RAG Qdrant : milliers de chunks du vault indexés",
-      "MCPs : TickTick + Home Assistant + base perso",
-      "Mémoire cross-session validée (cron 15 min)",
-      "Persona via SOUL.md (system prompt structuré)",
-      "Skills modulaires (rag-vault, supabase-rest, etc.)",
+      "Modèle de pointe (Kimi K2) avec bascule automatique en cas d'incident fournisseur",
+      "Mémoire indexée de mes notes : retrouve une idée évoquée plusieurs mois plus tôt",
+      "Accès direct à mes tâches, à ma domotique, à ma base de données personnelle",
+      "Mémoire qui persiste entre les sessions — l'agent se souvient des conversations passées",
+      "Personnalité configurable via un fichier dédié",
+      "Capacités modulaires, ajoutables à la volée selon les besoins",
     ],
     metrics: [
-      { label: 'MCPs connectés', value: '3' },
+      { label: 'Outils connectés', value: '3+' },
     ],
   },
   {
@@ -182,7 +183,6 @@ export const projects: Project[] = [
     ],
     links: [
       { label: 'mgdesign.cloud (archive)', href: 'https://mgdesign.cloud', icon: 'tabler:external-link', external: true },
-      { label: 'Voir Stashflask (nouveau produit)', href: '/boutique/stashflask', icon: 'tabler:shopping-bag' },
     ],
     // [TODO] Ajouter 4-6 photos : produits livrés, atelier, Berlin 2025
     screenshots: [
@@ -196,26 +196,26 @@ export const projects: Project[] = [
   {
     slug: 'psm',
     title: 'PSM — pilotage perso',
-    tagline: 'Cockpit data-oriented sur mon quotidien',
+    tagline: 'Centraliser ses données du quotidien pour un coaching IA pertinent',
     icon: 'tabler:dashboard',
     status: 'live',
     year: '2024 →',
     tags: ['data', 'self-hosting', 'productivity'],
     stack: ['Supabase', 'PostgreSQL', 'TickTick API', 'n8n', 'Python'],
     summary:
-      "Plus d'une dizaine de schémas qui consolident mes outils du quotidien (tâches, capteurs, agenda) pour que mon agent IA puisse en faire quelque chose d'utile.",
+      "Mes outils du quotidien (tâches, capteurs santé, agenda, suivi du temps) parlent rarement entre eux. PSM les rassemble dans une base unifiée pour que mon agent IA personnel puisse en tirer des bilans pertinents et proposer un coaching qui tient debout.",
     description:
-      "PSM (Personal System Management) est ma façon de relier les outils que j'utilise déjà — TickTick, agenda, capteurs santé via smartwatch + Android, time-tracking via [Mirai](/projets/mirai) — dans une base unifiée. L'idée n'est pas de tout mesurer, c'est de donner à mon [agent IA personnel auto-hébergé](/projets/hermes-ai-stack) le contexte qu'il faut pour rester pertinent au quotidien : faire un bilan, proposer un coaching, repérer un pattern. Les bilans hebdomadaires sortent automatiquement, le reste est à la demande.",
+      "PSM (Personal System Management) relie les outils que j'utilise déjà — TickTick, agenda, capteurs santé, [Mirai](/projets/mirai) pour le suivi du temps — dans une base unifiée et requêtable. L'idée n'est pas de tout mesurer (la donnée pour la donnée ne sert à rien), c'est de donner à mon [agent IA personnel](/projets/hermes-ai-stack) le contexte qu'il faut pour rester pertinent : repérer un pattern hebdomadaire, proposer un coaching tenant compte de mon état réel, faire un bilan croisé entre humeur et activité. Les bilans hebdomadaires sortent automatiquement, le reste à la demande.",
     highlights: [
-      "Plus d'une dizaine de schémas Supabase en production",
-      "Bilans hebdomadaires automatisés (PERMA-V)",
-      "Sync TickTick → tâches centralisées (cron horaire)",
-      "Pipeline capteurs santé Android → base perso",
-      "Tout passe par Hermès pour l'analyse et le reporting",
+      "Plus de dix sources de données consolidées en une base unique requêtable",
+      "Bilans hebdomadaires automatisés croisant émotions, activités et tâches (cadre PERMA-V)",
+      "Mes tâches synchronisées toutes les heures depuis TickTick",
+      "Capteurs santé Samsung intégrés en temps réel",
+      "Tout passe par Hermès pour l'analyse et le reporting — pas de tableaux de bord à consulter",
     ],
     metrics: [
-      { label: 'Schémas DB', value: '10+' },
       { label: 'Sources connectées', value: '5+' },
+      { label: 'Bilans générés', value: '120+' },
     ],
   },
 ];

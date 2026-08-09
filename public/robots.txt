@@ -1,2 +1,5 @@
 User-agent: *
-Disallow:
+Disallow: /boutique
+Disallow: /boutique/
+
+Sitemap: https://martin.nuagegreen.eu/sitemap-index.xml

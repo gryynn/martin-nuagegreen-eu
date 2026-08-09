@@ -39,6 +39,42 @@ const { language, textDirection } = I18N;
 
     <!-- Comment the line below to disable View Transitions -->
     <ClientRouter fallback="swap" />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'Person',
+          '@id': 'https://martin.nuagegreen.eu/#person',
+          name: 'Martin Green',
+          jobTitle: 'Chef de projet ingénierie',
+          worksFor: { '@type': 'Organization', name: 'Enedis' },
+          url: 'https://martin.nuagegreen.eu',
+          sameAs: [
+            'https://github.com/gryynn',
+            'https://www.linkedin.com/in/martingreenfrance',
+          ],
+          knowsAbout: [
+            'IA appliquée',
+            'Agents IA',
+            'Self-hosting',
+            'Souveraineté numérique',
+            'Gestion de projet industriel',
+            'Data engineering',
+            'Impression 3D',
+          ],
+          address: { '@type': 'PostalAddress', addressLocality: 'Paris', addressCountry: 'FR' },
+        },
+        {
+          '@type': 'WebSite',
+          '@id': 'https://martin.nuagegreen.eu/#website',
+          url: 'https://martin.nuagegreen.eu',
+          name: 'Martin Green — Maillon digital ↔ réel',
+          inLanguage: 'fr',
+          publisher: { '@id': 'https://martin.nuagegreen.eu/#person' },
+        },
+      ],
+    })} />
   </head>
 
   <body class="antialiased text-default bg-page tracking-tight relative overflow-x-hidden">

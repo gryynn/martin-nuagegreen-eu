@@ -22,6 +22,20 @@ const metadata = {
   description: project.tagline,
 };
 
+const projectSchema = {
+  '@context': 'https://schema.org',
+  '@type': project.tags.includes('mobile') || project.tags.includes('pwa') || project.tags.includes('ai') ? 'SoftwareApplication' : 'CreativeWork',
+  name: project.title,
+  description: project.summary,
+  url: `https://martin.nuagegreen.eu/projets/${project.slug}`,
+  author: { '@id': 'https://martin.nuagegreen.eu/#person' },
+  keywords: [...project.tags, ...project.stack].join(', '),
+  dateCreated: project.year.split(' ')[0],
+  ...(project.tags.includes('mobile') || project.tags.includes('pwa') || project.tags.includes('ai')
+    ? { applicationCategory: 'Productivity', operatingSystem: project.tags.includes('mobile') ? 'Android' : 'Web' }
+    : {}),
+};
+
 // Parse Markdown inline dans la description (autorise [Mirai](/projets/mirai), **gras**, *italique*).
 // On utilise parseInline pour ne pas wrapper le résultat dans un <p>.
 const descriptionHtml = marked.parseInline(project.description, { async: false }) as string;
@@ -42,6 +56,7 @@ const related = projects
 ---
 
 <Layout metadata={metadata}>
+  <script type="application/ld+json" set:html={JSON.stringify(projectSchema)} />
   <article class="relative not-prose overflow-hidden">
     <!-- Decorative orbs -->
     <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -161,7 +176,7 @@ const related = projects
         <h2 class="text-sm font-semibold tracking-[0.2em] uppercase mb-4" style="color: var(--aw-color-accent);">
           Stack
         </h2>
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-wrap gap-2 mb-4">
           {
             project.stack.map((s) => (
               <span class="text-sm px-3 py-1.5 rounded-lg font-medium"
@@ -171,6 +186,11 @@ const related = projects
             ))
           }
         </div>
+        <p class="text-sm text-muted italic opacity-80">
+          Le détail technique (architecture, code, décisions) vit sur
+          <a href="https://github.com/gryynn" target="_blank" rel="noopener" class="underline hover:opacity-100" style="color: var(--aw-color-accent);">mon profil GitHub</a> —
+          ce site garde la vue d'ensemble.
+        </p>
       </section>
 
       <!-- Testimonials -->

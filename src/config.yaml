@@ -8,16 +8,16 @@ metadata:
   title:
     default: Martin Green — Maillon digital ↔ réel
     template: '%s — Martin Green'
-  description: "Chef de projet ingénierie chez Enedis, je teste IA appliquée, agents et fabrication 3D. Au croisement du digital et du réel."
+  description: "Chef de projet ingénierie chez Enedis. En parallèle, je conçois mes propres outils numériques — cloud personnel, agent IA avec mémoire, applications mobiles qui durent. La preuve par le faire."
   robots:
     index: true
     follow: true
   openGraph:
     site_name: Martin Green
     images:
-      - url: '~/assets/images/default.png'
+      - url: '~/assets/images/og-default.png'
         width: 1200
-        height: 628
+        height: 630
     type: website
 
 i18n:
