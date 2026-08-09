@@ -4,8 +4,8 @@ export const headerData = {
   links: [
     { text: 'Accueil', href: getPermalink('/'), icon: 'tabler:home' },
     { text: 'Projets', href: getPermalink('/projets'), icon: 'tabler:apps' },
+    { text: 'Green Stack', href: getPermalink('/green-stack'), icon: 'tabler:stack-2' },
     { text: 'Articles', href: getBlogPermalink(), icon: 'tabler:notebook' },
-    { text: 'Boutique', href: getPermalink('/boutique'), icon: 'tabler:shopping-bag' },
     { text: 'À propos', href: getPermalink('/about'), icon: 'tabler:user' },
     { text: 'Contact', href: getPermalink('/contact'), icon: 'tabler:mail' },
   ],
@@ -19,8 +19,8 @@ export const footerData = {
       links: [
         { text: 'Accueil', href: getPermalink('/') },
         { text: 'Projets', href: getPermalink('/projets') },
+        { text: 'Green Stack', href: getPermalink('/green-stack') },
         { text: 'Articles', href: getBlogPermalink() },
-        { text: 'Boutique', href: getPermalink('/boutique') },
         { text: 'À propos', href: getPermalink('/about') },
         { text: 'Contact', href: getPermalink('/contact') },
       ],
@@ -61,5 +61,10 @@ export const footerData = {
          rel="noopener">build ${import.meta.env.PUBLIC_BUILD_COMMIT}</a>
       · ${import.meta.env.PUBLIC_BUILD_DATE}
     </span>
+    <a class="ml-2 opacity-20 hover:opacity-100 transition-opacity text-xs"
+       href="/boutique/stashflask"
+       rel="nofollow"
+       title="psst..."
+       aria-label="Easter egg">◇</a>
   `,
 };

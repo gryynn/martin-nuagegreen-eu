@@ -1,0 +1,704 @@
+---
+import Hero from '~/components/widgets/Hero.astro';
+import Content from '~/components/widgets/Content.astro';
+import Features2 from '~/components/widgets/Features2.astro';
+import Steps2 from '~/components/widgets/Steps2.astro';
+import { Icon } from 'astro-icon/components';
+import Headline from '~/components/ui/Headline.astro';
+import Button from '~/components/ui/Button.astro';
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Green Stack — votre assistant IA, sur votre machine',
+  description:
+    "Je monte l'infrastructure qui accueille l'IA chez vous : une mémoire qui ne s'efface pas, vos fichiers et vos règles au centre, le fournisseur de votre choix branché dessus. Puis je vous apprends à vous en servir en autonomie.",
+};
+
+// Réservation de créneau : fonction « Rendez-vous » de l'app Calendar Nextcloud (auto-hébergée).
+// Créneaux : samedi et dimanche 9h-15h, mardi et jeudi 18h-20h. Rendez-vous d'1 h à l'heure pile,
+// 30 min de tampon après, 2 par jour maximum.
+//
+// Si ce lien tombe, on retombe automatiquement sur le mailto pré-rempli ci-dessous. À noter : le
+// composant ui/Form.astro du template a un <form> SANS action, un vrai formulaire de contact
+// enverrait les demandes dans le vide.
+const BOOKING_URL: string | null = 'https://nextcloud.mgdesign.cloud/apps/calendar/appointment/ot8yRzpxxtAs';
+
+const mailtoReservation = `mailto:contact@nuagegreen.eu?subject=${encodeURIComponent(
+  'Green Stack — proposition de créneau'
+)}&body=${encodeURIComponent(
+  `Bonjour Martin,
+
+Aucun des créneaux affichés ne me convient. Voici mes disponibilités :
+(par exemple : en semaine après 20h, ou le samedi après-midi)
+
+
+Où j'en suis avec l'IA aujourd'hui :
+
+
+Le matériel que j'ai chez moi (PC fixe, NAS, serveur, rien pour l'instant) :
+
+
+Ce que j'aimerais arriver à faire :
+
+
+Merci,
+`
+)}`;
+
+const reservationHref = BOOKING_URL ?? mailtoReservation;
+const reservationText = BOOKING_URL ? 'Choisir un créneau' : 'Demander un créneau';
+
+// Agenda hebdomadaire affiché sur la page. Il montre la disponibilité récurrente, pas l'état réel
+// des réservations : le site est en build statique et l'API de créneaux de Nextcloud n'envoie pas
+// d'en-têtes CORS, donc pas de lecture en direct depuis le navigateur sans ouvrir le CORS côté
+// Traefik. La disponibilité réelle se voit à l'écran suivant, sur la page de réservation.
+const hours = (from: number, to: number) =>
+  Array.from({ length: to - from }, (_, i) => `${String(from + i).padStart(2, '0')}:00`);
+
+
+// Questions en accordéon (<details> natif : zéro JS, accessible au clavier).
+// `open: true` sur la question des données : c'est l'objection qui compte le plus et la réponse
+// honnête est un argument de vente, donc elle ne se cache pas derrière un clic.
+const faqs = [
+  {
+    q: 'Ça me coûte quoi tous les mois ?',
+    open: false,
+    a: "De mon côté, rien. C'est vous qui choisissez comment l'IA s'intègre, et vous payez directement le fournisseur, avec votre compte. Trois possibilités : un abonnement chez un grand fournisseur si vous voulez le plus simple et le plus performant, un paiement à l'usage qui revient souvent à quelques euros par mois si vos usages sont légers, ou un modèle qui tourne sur votre propre machine si vous ne voulez rien envoyer dehors. On peut aussi mélanger : le local par défaut, et le reste seulement quand c'est nécessaire. Dans tous les cas je ne m'intercale jamais entre vous et votre fournisseur, et je n'ouvre aucun compte à mon nom.",
+  },
+  {
+    q: 'Mes données partent où ?',
+    open: true,
+    a: "Soyons précis, parce que la réponse « nulle part » serait un mensonge commercial. Ce que vous stockez reste chez vous : vos notes, vos documents, votre mémoire vivent sur votre disque, en fichiers lisibles. Ce que vous envoyez à un modèle transite par les serveurs du fournisseur que vous avez choisi, comme n'importe quel usage de l'IA. La différence est ailleurs, et elle est décisive : le jour où ce fournisseur augmente ses prix, change ses conditions ou ferme, vous gardez tout et vous rebranchez autre chose en une journée. Vous n'êtes locataire de rien. Et pour ce qui est sensible, on peut décider que ça ne sort pas de la machine.",
+  },
+  {
+    q: 'Et si je casse quelque chose ?',
+    open: false,
+    a: "Il y a un vrai risque, et je préfère le dire. Un assistant à qui vous donnez le droit d'écrire sur vos fichiers peut en modifier ou en effacer, et une facture d'usage peut grimper si on lance quelque chose sans regarder. C'est pour ça que le dossier que je livre arrive avec des garde-fous par défaut : périmètre limité, rien qui se lance sans confirmation, sauvegardes en place avant qu'on touche à quoi que ce soit, et un historique qui permet de revenir en arrière. On installe ensemble, et je vous montre exactement où sont les freins et comment les serrer.",
+  },
+  {
+    q: 'Pourquoi passer par vous plutôt que suivre un tutoriel ?',
+    open: false,
+    a: "Vous pouvez tout à fait suivre un tutoriel, et certains s'en sortent très bien, d'autant que l'assistant lui-même est un excellent professeur. Ce que vous achetez ici, c'est le temps et les tokens que vous ne dépenserez pas à chercher, et une série de choix déjà tranchés parce que je les ai testés sur ma propre installation pendant deux ans. Vous partez de la version qui marche, pas de la première.",
+  },
+  {
+    q: 'Vous faites ça pour les entreprises ?',
+    open: false,
+    a: "Autrement, et pas par cette page. Écrivez moi et on en parle.",
+  },
+];
+
+const offers = [
+  {
+    title: 'Cadrage',
+    subtitle: '1 h en visio',
+    price: 'Offert',
+    currency: false,
+    period: 'sans engagement',
+    cta: 'Réserver',
+    highlight: false,
+    items: [
+      'Vos besoins, votre matériel, votre niveau',
+      'Un diagnostic écrit à la fin',
+      'Un devis si vous voulez continuer',
+    ],
+  },
+  {
+    title: 'Socle',
+    subtitle: 'le dossier essentiel',
+    price: '250',
+    currency: true,
+    period: 'une fois',
+    cta: 'En parler',
+    highlight: true,
+    items: [
+      'Assistant et mémoire installés sur votre machine',
+      'Votre structure de notes et vos règles',
+      'Le guide de prise en main',
+      'Rien à héberger, aucun frais récurrent de mon côté',
+    ],
+  },
+  {
+    title: 'Complet',
+    subtitle: 'sur mesure',
+    price: '590',
+    currency: true,
+    period: 'une fois',
+    cta: 'En parler',
+    highlight: false,
+    items: [
+      'Tout le socle',
+      'Vos outils branchés dessus (agenda, domotique, notes, finances)',
+      'Des automatisations à vous',
+      "L'accès depuis votre téléphone si vous le voulez",
+    ],
+  },
+  {
+    title: 'Suivi',
+    subtitle: 'quand vous en avez besoin',
+    price: '100',
+    currency: true,
+    period: "l'heure, ou 3 h pour 270 €",
+    cta: 'En parler',
+    highlight: false,
+    items: [
+      "Vous butez, vous voulez monter d'un cran",
+      'On prend une heure',
+      'Sans abonnement ni engagement de durée',
+    ],
+  },
+];
+
+
+// Fenêtres d'ouverture, partagées entre le rendu serveur (fallback) et le script client (live).
+// ⚠️ Doit refléter la configuration « Rendez-vous » de Nextcloud (Calendrier → Rendez-vous).
+// Sert uniquement à dessiner la grille : les heures présentes ici mais absentes de la réponse
+// de Nextcloud s'affichent en « pris ». Une indisponibilité ponctuelle ne se gère PAS ici,
+// il suffit de poser un événement dans l'agenda `personal` ou `couple`.
+const openWindows: Record<string, string[]> = {
+  TU: hours(18, 20),
+  TH: hours(18, 20),
+  SA: hours(9, 15),
+};
+
+const week = [
+  { label: 'Mardi', range: '18h → 20h', slots: hours(18, 20) },
+  { label: 'Jeudi', range: '18h → 20h', slots: hours(18, 20) },
+  { label: 'Samedi', range: '9h → 15h', slots: hours(9, 15) },
+  { label: 'Dimanche', range: '9h → 15h', slots: hours(9, 15) },
+];
+---
+
+<Layout metadata={metadata}>
+  <!-- HERO -->
+  <Hero
+    tagline="Green Stack"
+    actions={[
+      {
+        variant: 'primary',
+        text: "Réserver l'heure de cadrage (offerte)",
+        href: '#reserver',
+        icon: 'tabler:calendar-plus',
+      },
+    ]}
+  >
+    <Fragment slot="title">
+      Arrêtez de <span class="text-accent dark:text-white">tout réexpliquer.</span>
+    </Fragment>
+
+    <Fragment slot="subtitle">
+      Je vous monte l'infrastructure qui accueille l'IA chez vous : une mémoire qui ne s'efface pas, vos fichiers et vos
+      règles au centre, et le fournisseur de votre choix branché dessus. Anthropic, OpenAI, un modèle local, ou les
+      trois. Vos données restent les vôtres quoi qu'il arrive, et à la fin vous vous en servez en autonomie.
+    </Fragment>
+  </Hero>
+
+  <!-- LE PROBLÈME -->
+  <Content
+    tagline="Pourquoi"
+    title="Un chatbot oublie tout. Un système, non."
+    items={[
+      {
+        title: 'La conversation se termine, tout repart de zéro',
+        description:
+          "Vous utilisez déjà l'IA. Elle est brillante trente secondes, puis la conversation arrive à son terme. Vous en ouvrez une nouvelle, et elle a tout oublié. Vous réexpliquez qui vous êtes, sur quoi vous travaillez, ce que vous lui aviez dit la semaine dernière. À chaque fois.",
+        icon: 'tabler:refresh-alert',
+      },
+      {
+        title: "Le vrai manque n'est pas le confort",
+        description:
+          "Une IA devient utile quand elle sait qui vous êtes : ce que vous avez déjà installé, vos projets en cours, vos idées connexes, vos contraintes. À partir de là elle ne répond plus à une question isolée. Elle voit les liens, elle repère les risques et les opportunités de manière systémique, et elle vous ressort une réflexion que vous aviez eue il y a six mois au moment exact où elle compte.",
+        icon: 'tabler:topology-star-3',
+      },
+      {
+        title: "Ce qui change tout n'est pas le modèle",
+        description:
+          "C'est ce qu'il y a autour : une mémoire qui persiste, des règles écrites une fois pour toutes, une organisation de vos fichiers qu'elle comprend. Ce sont des fichiers texte sur votre disque, rien de plus exotique. C'est cette couche là que j'installe.",
+        icon: 'tabler:stack-2',
+      },
+    ]}
+  />
+
+  <!-- POUR QUI -->
+  <Content
+    isReversed
+    tagline="Pour qui"
+    title="Je vends la canne à pêche, pas le poisson."
+    items={[
+      {
+        title: "C'est pour vous si",
+        description:
+          "Vous avez envie de mettre les mains dedans, vous avez déjà une machine qui tourne chez vous (un PC fixe, un NAS, un petit serveur), et l'idée que vos notes et vos documents restent sur votre disque vous parle plus qu'un abonnement de plus.",
+        icon: 'tabler:check',
+      },
+      {
+        title: 'Ce que ça débloque',
+        description:
+          "L'intérêt de cette infrastructure, c'est de pouvoir exploiter vos données, n'importe lesquelles, sans vous embêter. Vos notes, vos tickets de caisse, votre suivi sportif, votre domotique, vos comptes. On branche vos outils existants dessus et l'assistant va les chercher tout seul, au lieu que vous passiez vos soirées à construire des interfaces que vous serez seul à utiliser.",
+        icon: 'tabler:plug-connected',
+      },
+      {
+        title: "Ce n'est pas pour vous si",
+        description:
+          "Vous cherchez quelqu'un qui fasse tourner un truc à votre place sans que vous ayez à comprendre. Ça existe, ce n'est juste pas ce que je fais.",
+        icon: 'tabler:x',
+      },
+    ]}
+  />
+
+  <!-- CE QUE ÇA DONNE -->
+  <Features2
+    tagline="Concrètement"
+    title="Trois choses faites cette semaine"
+    subtitle="Aucune n'a demandé d'écrire une ligne de code. Toutes ont demandé une infrastructure qui savait déjà où sont mes fichiers, ce que j'ai chez moi, et comment je travaille."
+    columns={3}
+    items={[
+      {
+        title: 'Un objet dessiné et imprimé depuis le train',
+        description:
+          "Besoin d'un cendrier de poche pour un festival, trois jours devant moi. Depuis mon téléphone, en discutant : la conception technique, un logo converti pour être gravé dessus, le fichier prêt pour l'imprimante. Imprimé le soir même, et le pas de vis fonctionnait du premier coup, ce qui ne m'était jamais arrivé.",
+        icon: 'tabler:cube-3d-sphere',
+      },
+      {
+        title: 'Un ticket de caisse photographié, classé, oublié',
+        description:
+          "Photo envoyée depuis le téléphone, l'assistant lit le montant et la date, demande confirmation, range la ligne dans la base. Les dépenses alimentent un tableau de bord qui se met à jour tout seul. Plus de saisie, plus de tableur à tenir.",
+        icon: 'tabler:receipt',
+      },
+      {
+        title: 'Un tableau de bord domotique en une phrase',
+        description:
+          "« Fais-moi un écran avec toutes les lumières et le niveau de batterie de chaque capteur. » Ce qui prenait un week-end de configuration prend le temps de la demande.",
+        icon: 'tabler:bulb',
+      },
+    ]}
+  />
+
+  <!-- LA MÉTHODE -->
+  <Steps2
+    title="Comment ça se passe"
+    subtitle="Trois temps, et vous pouvez vous arrêter après le premier."
+    items={[
+      {
+        title: 'On se parle une heure',
+        description:
+          "Vos besoins, votre matériel, votre niveau, ce que vous voulez faire de l'IA. J'enregistre, avec votre accord. Vous repartez avec un diagnostic, même si on s'arrête là.",
+      },
+      {
+        title: 'Je vous prépare un dossier sur mesure',
+        description:
+          "Il contient les scripts d'installation, la structure de votre mémoire, vos règles, et un guide que l'assistant déroule lui-même la première fois que vous le lancez.",
+      },
+      {
+        title: 'Vous installez et vous explorez',
+        description:
+          'Vous êtes autonome. Si vous butez, ou si vous voulez aller plus loin, vous reprenez une heure quand vous voulez.',
+      },
+    ]}
+  />
+
+  <!-- TARIFS -->
+  <section class="relative not-prose">
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
+      <Headline
+        tagline="Tarifs"
+        title="Trois lignes, pas d'abonnement"
+        subtitle="Au delà de ces formules, on en parle et je vous fais un devis. Les prix sont nets, il n'y a pas de TVA à ajouter."
+      />
+
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 items-stretch">
+        {
+          offers.map((offer) => (
+            <div
+              class={`glass-card flex flex-col h-full ${offer.highlight ? 'gs-ring' : ''}`}
+            >
+              <div class="flex items-center justify-between gap-2">
+                <h3 class="font-heading font-bold text-lg">{offer.title}</h3>
+                {offer.highlight && (
+                  <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full gs-badge">
+                    entrée
+                  </span>
+                )}
+              </div>
+              <p class="text-sm text-muted mt-1">{offer.subtitle}</p>
+
+              <div class="my-6">
+                <div class="flex items-baseline gap-1">
+                  <span class="text-4xl font-extrabold tracking-tight">{offer.price}</span>
+                  {offer.currency && <span class="text-2xl font-bold">€</span>}
+                </div>
+                <p class="text-sm text-muted mt-1">{offer.period}</p>
+              </div>
+
+              <ul class="space-y-2 text-sm flex-grow">
+                {offer.items.map((item) => (
+                  <li class="flex items-start gap-2 leading-6">
+                    <Icon name="tabler:check" class="w-4 h-4 mt-1 shrink-0 text-accent" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div class="mt-6">
+                <Button
+                  variant={offer.highlight ? 'primary' : 'secondary'}
+                  href="#reserver"
+                  class="w-full justify-center"
+                >
+                  {offer.cta}
+                </Button>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- QUESTIONS -->
+  <section class="relative not-prose">
+    <div class="relative max-w-3xl mx-auto px-4 sm:px-6 py-12 md:py-16">
+      <Headline tagline="Questions" title="Ce qu'on me demande le plus" />
+
+      <div class="glass-card !p-0 overflow-hidden">
+        {
+          faqs.map((faq, i) => (
+            <details class="gs-faq group" open={faq.open}>
+              <summary class={`flex items-center justify-between gap-4 cursor-pointer select-none px-5 py-4 sm:px-6 ${i > 0 ? 'border-t gs-line' : ''}`}>
+                <span class="font-heading font-semibold text-base sm:text-lg">{faq.q}</span>
+                <Icon
+                  name="tabler:chevron-down"
+                  class="w-5 h-5 shrink-0 text-accent transition-transform duration-200 group-open:rotate-180"
+                />
+              </summary>
+              <div class="px-5 pb-5 sm:px-6 sm:pb-6 -mt-1 text-sm leading-7 text-muted">{faq.a}</div>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- RÉSERVATION -->
+  <section id="reserver" class="relative not-prose scroll-mt-20">
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
+      <Headline
+        tagline="On se parle"
+        title="Une heure, offerte, sans engagement."
+        subtitle="Vos besoins, votre matériel, votre niveau, et ce que vous voulez faire de l'IA. Vous repartez avec un diagnostic, même si on s'arrête là."
+      />
+
+      <div
+        class="glass-card !p-0 overflow-hidden"
+        data-booking-base="https://nextcloud.mgdesign.cloud/apps/calendar/appointment/ot8yRzpxxtAs"
+        data-window={JSON.stringify(openWindows)}
+      >
+        <div class="overflow-x-auto">
+          <div id="agenda-grid" class="min-w-[640px] p-4 sm:p-6">
+            <div class="animate-pulse space-y-3">
+              <div class="h-6 w-40 rounded gs-skeleton" />
+              <div class="h-64 rounded gs-skeleton" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="mt-4 text-center text-sm text-muted" id="agenda-status">Chargement des disponibilités…</p>
+
+      <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <span class="text-sm text-muted">Aucun de ces créneaux ne vous arrange ?</span>
+        <Button variant="secondary" href={mailtoReservation} icon="tabler:mail">
+          Me proposer un autre moment
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODALE DE RÉSERVATION -->
+  <dialog
+    id="booking-modal"
+    class="backdrop:bg-black/60 backdrop:backdrop-blur-sm bg-transparent p-0 max-w-lg w-[92vw] rounded-2xl"
+  >
+    <div class="glass-card !rounded-2xl">
+      <div id="booking-form-wrap">
+        <div class="flex items-start justify-between gap-4 mb-1">
+          <h3 class="font-heading font-bold text-xl">Réserver ce créneau</h3>
+          <button type="button" data-close class="text-muted hover:text-accent text-2xl leading-none" aria-label="Fermer"
+            >&times;</button
+          >
+        </div>
+        <p class="text-sm text-muted mb-5" id="booking-when"></p>
+
+        <form id="booking-form" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium mb-1" for="bk-name">Votre nom</label>
+            <input
+              id="bk-name"
+              name="displayName"
+              required
+              autocomplete="name"
+              class="w-full rounded-lg gs-input px-3 py-2 text-sm"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1" for="bk-email">Votre email</label>
+            <input
+              id="bk-email"
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+              class="w-full rounded-lg gs-input px-3 py-2 text-sm"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1" for="bk-desc">Où vous en êtes, en deux lignes</label>
+            <textarea
+              id="bk-desc"
+              name="description"
+              rows="3"
+              placeholder="Le matériel que vous avez chez vous, ce que vous aimeriez arriver à faire…"
+              class="w-full rounded-lg gs-input px-3 py-2 text-sm"
+            ></textarea>
+          </div>
+          <p class="text-xs text-muted">
+            Vos coordonnées servent uniquement à organiser ce rendez-vous. Elles restent sur mon serveur et ne sont
+            transmises à personne.
+          </p>
+          <p id="booking-error" class="hidden text-sm gs-error"></p>
+          <button
+            type="submit"
+            id="booking-submit"
+            class="btn btn-primary w-full justify-center"
+          >
+            Confirmer le rendez-vous
+          </button>
+        </form>
+      </div>
+
+      <div id="booking-done" class="hidden text-center py-4">
+        <div class="text-4xl mb-3">✓</div>
+        <h3 class="font-heading font-bold text-xl mb-2">C'est noté.</h3>
+        <p class="text-sm text-muted mb-6" id="booking-done-when"></p>
+        <p class="text-sm text-muted mb-6">
+          Vous recevez un mail de confirmation avec le lien de visio. À très vite.
+        </p>
+        <button type="button" data-close class="btn btn-secondary">Fermer</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script is:inline>
+    (() => {
+      const root = document.querySelector('[data-booking-base]');
+      if (!root) return;
+      const base = root.dataset.bookingBase;
+      const openWindows = JSON.parse(root.dataset.window);
+      const grid = document.getElementById('agenda-grid');
+      const status = document.getElementById('agenda-status');
+      const modal = document.getElementById('booking-modal');
+      const TZ = 'Europe/Paris';
+      const DAYS = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+
+      const fmtWeekday = new Intl.DateTimeFormat('fr-FR', { weekday: 'short' });
+      const fmtDate = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'short' });
+      const fmtHour = new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: TZ });
+      const fmtLong = new Intl.DateTimeFormat('fr-FR', {
+        weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: TZ,
+      });
+      const esc = (v) => String(v).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+      const openDays = [];
+      const today = new Date();
+      for (let i = 0; openDays.length < 6 && i < 30; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() + i);
+        const key = DAYS[d.getDay()];
+        if (openWindows[key]) openDays.push({ date: d, key });
+      }
+
+      const allHours = [...new Set(Object.values(openWindows).flat())].sort();
+      const rows = [];
+      allHours.forEach((h, i) => {
+        if (i > 0 && parseInt(h) - parseInt(allHours[i - 1]) > 1) rows.push({ gap: true });
+        rows.push({ hour: h });
+      });
+
+      const iso = (d) =>
+        `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+      const fetchDay = async ({ date, key }) => {
+        try {
+          const r = await fetch(`${base}/slots?dateSelected=${iso(date)}&timeZone=${encodeURIComponent(TZ)}`, {
+            headers: { 'OCS-APIRequest': 'true', Accept: 'application/json' },
+          });
+          const j = await r.json();
+          const slots = j && j.status === 'success' && Array.isArray(j.data) ? j.data : [];
+          const free = {};
+          slots.forEach((s) => (free[fmtHour.format(new Date(s.start * 1000))] = s));
+          return { date, key, free };
+        } catch (e) {
+          return null;
+        }
+      };
+
+      // ---- Modale ----
+      let current = null;
+      const errBox = document.getElementById('booking-error');
+      const openModal = (slot) => {
+        current = slot;
+        document.getElementById('booking-when').textContent = fmtLong.format(new Date(slot.start * 1000));
+        errBox.classList.add('hidden');
+        document.getElementById('booking-form-wrap').classList.remove('hidden');
+        document.getElementById('booking-done').classList.add('hidden');
+        modal.showModal();
+      };
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal || e.target.closest('[data-close]')) modal.close();
+      });
+
+      document.getElementById('booking-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!current) return;
+        const btn = document.getElementById('booking-submit');
+        const fd = new FormData(e.target);
+        btn.disabled = true;
+        btn.textContent = 'Envoi…';
+        errBox.classList.add('hidden');
+        try {
+          const r = await fetch(`${base}/book`, {
+            method: 'POST',
+            headers: { 'OCS-APIRequest': 'true', 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              start: current.start,
+              end: current.end,
+              displayName: fd.get('displayName'),
+              email: fd.get('email'),
+              description: fd.get('description') || '',
+              timeZone: TZ,
+            }),
+          });
+          const j = await r.json().catch(() => null);
+          if (!r.ok || !j || j.status !== 'success') throw new Error((j && j.message) || 'Erreur');
+          document.getElementById('booking-done-when').textContent = fmtLong.format(new Date(current.start * 1000));
+          document.getElementById('booking-form-wrap').classList.add('hidden');
+          document.getElementById('booking-done').classList.remove('hidden');
+          const cell = grid.querySelector(`[data-start="${current.start}"]`);
+          if (cell) cell.outerHTML = takenCell(fmtHour.format(new Date(current.start * 1000)));
+        } catch (err) {
+          errBox.textContent = "La réservation n'a pas pu être enregistrée. Réessayez, ou écrivez moi à contact@nuagegreen.eu.";
+          errBox.classList.remove('hidden');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Confirmer le rendez-vous';
+        }
+      });
+
+      const takenCell = (h) =>
+        `<div class="flex h-full min-h-[2.5rem] flex-col justify-center rounded-lg gs-slot-taken px-2 py-1 text-center" title="Déjà pris">
+          <span class="text-sm font-medium line-through">${esc(h)}</span>
+          <span class="text-[10px] uppercase tracking-wide">pris</span>
+        </div>`;
+
+      // ---- Rendu ----
+      Promise.all(openDays.map(fetchDay)).then((days) => {
+        if (days.some((d) => d === null)) {
+          status.textContent = "Impossible de charger les disponibilités en direct. Écrivez moi à contact@nuagegreen.eu.";
+          grid.innerHTML = '';
+          return;
+        }
+
+        const cols = `72px repeat(${days.length}, minmax(90px, 1fr))`;
+        const header = days
+          .map(
+            (d) => `<div class="px-2 pb-3 text-center border-b gs-line">
+              <div class="text-xs uppercase tracking-wide text-muted">${esc(fmtWeekday.format(d.date).replace('.', ''))}</div>
+              <div class="font-heading font-bold text-base capitalize">${esc(fmtDate.format(d.date))}</div>
+            </div>`
+          )
+          .join('');
+
+        const body = rows
+          .map((row) => {
+            if (row.gap)
+              return `<div class="col-span-full h-4 flex items-center"><div class="w-full border-t border-dashed gs-line"></div></div>`;
+            const label = `<div class="pr-3 text-right text-xs text-muted tabular-nums pt-2 border-r gs-line">${esc(row.hour)}</div>`;
+            const cells = days
+              .map((d) => {
+                const cellCls = 'border-r border-b gs-line-soft';
+                if (!openWindows[d.key].includes(row.hour)) return `<div class="${cellCls} min-h-[3rem]"></div>`;
+                const slot = d.free[row.hour];
+                if (!slot) return `<div class="${cellCls} p-1">${takenCell(row.hour)}</div>`;
+                return `<div class="${cellCls} p-1">
+                  <button type="button" data-start="${slot.start}" data-end="${slot.end}"
+                    class="slot-free group flex h-full w-full min-h-[2.5rem] flex-col justify-center rounded-lg gs-slot-free px-2 py-1 text-center transition-colors duration-200">
+                    <span class="text-sm font-semibold">${esc(row.hour)}</span>
+                    <span class="text-[10px] uppercase tracking-wide opacity-70 group-hover:opacity-100">libre</span>
+                  </button>
+                </div>`;
+              })
+              .join('');
+            return label + cells;
+          })
+          .join('');
+
+        grid.innerHTML = `<div class="grid" style="grid-template-columns:${cols}">
+          <div class="border-b gs-line"></div>${header}${body}
+        </div>`;
+
+        grid.querySelectorAll('.slot-free').forEach((btn) =>
+          btn.addEventListener('click', () =>
+            openModal({ start: Number(btn.dataset.start), end: Number(btn.dataset.end) })
+          )
+        );
+
+        const total = days.reduce((n, d) => n + Object.keys(d.free).length, 0);
+        status.textContent = total
+          ? `${total} créneau${total > 1 ? 'x' : ''} d'une heure libre${total > 1 ? 's' : ''} sur les deux prochaines semaines. Cliquez, ça se réserve ici.`
+          : 'Complet sur les deux prochaines semaines. Écrivez moi et on trouvera un moment.';
+      });
+    })();
+  </script>
+
+  <style is:global>
+    /* Green Stack : couleurs derivees des variables de theme, donc valides en clair ET en sombre.
+       Necessaire parce que la couleur `accent` de Tailwind est une var() brute : les modificateurs
+       d'opacite (bg-accent/10, ring-accent/40) ne produisent rien. */
+    .gs-line { border-color: var(--glass-border); }
+    .gs-line-soft { border-color: color-mix(in srgb, var(--aw-color-text-muted) 18%, transparent); }
+    .gs-skeleton { background: color-mix(in srgb, var(--aw-color-text-muted) 14%, transparent); }
+    .gs-badge {
+      background: color-mix(in srgb, var(--aw-color-accent) 18%, transparent);
+      color: var(--aw-color-accent);
+    }
+    .gs-ring { box-shadow: 0 0 0 1px color-mix(in srgb, var(--aw-color-accent) 45%, transparent); }
+    .gs-slot-free {
+      border: 1px solid color-mix(in srgb, var(--aw-color-accent) 45%, transparent);
+      background: color-mix(in srgb, var(--aw-color-accent) 12%, transparent);
+      color: var(--aw-color-text-default);
+      cursor: pointer;
+    }
+    .gs-slot-free:hover {
+      background: var(--aw-color-accent);
+      border-color: var(--aw-color-accent);
+      color: var(--aw-color-bg-page);
+    }
+    .gs-slot-taken {
+      background: color-mix(in srgb, var(--aw-color-text-muted) 14%, transparent);
+      color: var(--aw-color-text-muted);
+    }
+    .gs-input {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--aw-color-text-default);
+    }
+    .gs-input::placeholder { color: var(--aw-color-text-muted); opacity: 0.75; }
+    .gs-input:focus { outline: none; border-color: var(--aw-color-accent); }
+    .gs-error { color: color-mix(in srgb, #ef4444 82%, var(--aw-color-text-default)); }
+    #booking-modal::backdrop { background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(4px); }
+    #booking-modal { color: var(--aw-color-text-default); }
+    .gs-faq summary { list-style: none; transition: background-color 160ms ease; }
+    .gs-faq summary::-webkit-details-marker { display: none; }
+    .gs-faq summary:hover { background: color-mix(in srgb, var(--aw-color-accent) 7%, transparent); }
+    .gs-faq summary:focus-visible { outline: 2px solid var(--aw-color-accent); outline-offset: -2px; }
+  </style>
+</Layout>
