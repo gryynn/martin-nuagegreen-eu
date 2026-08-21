@@ -159,13 +159,6 @@ const openWindows: Record<string, string[]> = {
   TH: hours(18, 20),
   SA: hours(9, 15),
 };
-
-const week = [
-  { label: 'Mardi', range: '18h → 20h', slots: hours(18, 20) },
-  { label: 'Jeudi', range: '18h → 20h', slots: hours(18, 20) },
-  { label: 'Samedi', range: '9h → 15h', slots: hours(9, 15) },
-  { label: 'Dimanche', range: '9h → 15h', slots: hours(9, 15) },
-];
 ---
 
 <Layout metadata={metadata}>
@@ -507,21 +500,17 @@ const week = [
       });
       const esc = (v) => String(v).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 
+      // On collecte 8 jours ouverts candidats : le jour courant peut etre elimine apres le
+      // fetch (creneaux deja passes), il faut de la marge pour en afficher 6 pleins.
+      const VISIBLE_DAYS = 6;
       const openDays = [];
       const today = new Date();
-      for (let i = 0; openDays.length < 6 && i < 30; i++) {
+      for (let i = 0; openDays.length < VISIBLE_DAYS + 2 && i < 30; i++) {
         const d = new Date(today);
         d.setDate(today.getDate() + i);
         const key = DAYS[d.getDay()];
         if (openWindows[key]) openDays.push({ date: d, key });
       }
-
-      const allHours = [...new Set(Object.values(openWindows).flat())].sort();
-      const rows = [];
-      allHours.forEach((h, i) => {
-        if (i > 0 && parseInt(h) - parseInt(allHours[i - 1]) > 1) rows.push({ gap: true });
-        rows.push({ hour: h });
-      });
 
       const iso = (d) =>
         `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -594,55 +583,68 @@ const week = [
       });
 
       const takenCell = (h) =>
-        `<div class="flex h-full min-h-[2.5rem] flex-col justify-center rounded-lg gs-slot-taken px-2 py-1 text-center" title="Déjà pris">
+        `<div class="flex min-h-[2.75rem] flex-col justify-center rounded-lg gs-slot-taken px-2 py-1 text-center" title="Déjà pris">
           <span class="text-sm font-medium line-through">${esc(h)}</span>
           <span class="text-[10px] uppercase tracking-wide">pris</span>
         </div>`;
 
       // ---- Rendu ----
-      Promise.all(openDays.map(fetchDay)).then((days) => {
-        if (days.some((d) => d === null)) {
+      // Une colonne par jour, chacune empilant ses propres creneaux. Pas d'axe horaire
+      // partage : les samedis (9h-15h) et les mardis/jeudis (18h-20h) n'ont aucune heure
+      // en commun, une grille croisee serait vide aux deux tiers.
+      Promise.all(openDays.map(fetchDay)).then((all) => {
+        if (all.some((d) => d === null)) {
           status.textContent = "Impossible de charger les disponibilités en direct. Écrivez moi à contact@nuagegreen.eu.";
           grid.innerHTML = '';
           return;
         }
 
-        const cols = `72px repeat(${days.length}, minmax(90px, 1fr))`;
-        const header = days
-          .map(
-            (d) => `<div class="px-2 pb-3 text-center border-b gs-line">
-              <div class="text-xs uppercase tracking-wide text-muted">${esc(fmtWeekday.format(d.date).replace('.', ''))}</div>
-              <div class="font-heading font-bold text-base capitalize">${esc(fmtDate.format(d.date))}</div>
-            </div>`
-          )
-          .join('');
+        // Aujourd'hui : Nextcloud ne renvoie que les creneaux encore a venir. Afficher les
+        // heures deja passees en « pris » serait faux, on ne garde donc que les libres, et
+        // on retire la journee s'il n'en reste aucun.
+        const todayIso = iso(new Date());
+        const days = all
+          .map((d) => {
+            const isToday = iso(d.date) === todayIso;
+            const hours = openWindows[d.key].filter((h) => !isToday || d.free[h]);
+            return { ...d, hours, isToday };
+          })
+          .filter((d) => d.hours.length)
+          .slice(0, VISIBLE_DAYS);
 
-        const body = rows
-          .map((row) => {
-            if (row.gap)
-              return `<div class="col-span-full h-4 flex items-center"><div class="w-full border-t border-dashed gs-line"></div></div>`;
-            const label = `<div class="pr-3 text-right text-xs text-muted tabular-nums pt-2 border-r gs-line">${esc(row.hour)}</div>`;
-            const cells = days
-              .map((d) => {
-                const cellCls = 'border-r border-b gs-line-soft';
-                if (!openWindows[d.key].includes(row.hour)) return `<div class="${cellCls} min-h-[3rem]"></div>`;
-                const slot = d.free[row.hour];
-                if (!slot) return `<div class="${cellCls} p-1">${takenCell(row.hour)}</div>`;
-                return `<div class="${cellCls} p-1">
-                  <button type="button" data-start="${slot.start}" data-end="${slot.end}"
-                    class="slot-free group flex h-full w-full min-h-[2.5rem] flex-col justify-center rounded-lg gs-slot-free px-2 py-1 text-center transition-colors duration-200">
-                    <span class="text-sm font-semibold">${esc(row.hour)}</span>
+        const total = days.reduce((n, d) => n + Object.keys(d.free).length, 0);
+
+        if (!days.length || !total) {
+          grid.innerHTML = '';
+          status.textContent = 'Complet sur les deux prochaines semaines. Écrivez moi et on trouvera un moment.';
+          return;
+        }
+
+        const columns = days
+          .map((d) => {
+            const cells = d.hours
+              .map((h) => {
+                const slot = d.free[h];
+                if (!slot) return takenCell(h);
+                return `<button type="button" data-start="${slot.start}" data-end="${slot.end}"
+                    class="slot-free group flex w-full min-h-[2.75rem] flex-col justify-center rounded-lg gs-slot-free px-2 py-1 text-center transition-colors duration-200">
+                    <span class="text-sm font-semibold">${esc(h)}</span>
                     <span class="text-[10px] uppercase tracking-wide opacity-70 group-hover:opacity-100">libre</span>
-                  </button>
-                </div>`;
+                  </button>`;
               })
               .join('');
-            return label + cells;
+            return `<div class="flex flex-col gap-2">
+              <div class="pb-3 mb-1 text-center border-b gs-line">
+                <div class="text-xs uppercase tracking-wide text-muted">${esc(fmtWeekday.format(d.date).replace('.', ''))}</div>
+                <div class="font-heading font-bold text-base capitalize">${esc(fmtDate.format(d.date))}</div>
+              </div>
+              ${cells}
+            </div>`;
           })
           .join('');
 
-        grid.innerHTML = `<div class="grid" style="grid-template-columns:${cols}">
-          <div class="border-b gs-line"></div>${header}${body}
+        grid.innerHTML = `<div class="grid gap-x-3" style="grid-template-columns:repeat(${days.length}, minmax(96px, 1fr))">
+          ${columns}
         </div>`;
 
         grid.querySelectorAll('.slot-free').forEach((btn) =>
@@ -651,10 +653,7 @@ const week = [
           )
         );
 
-        const total = days.reduce((n, d) => n + Object.keys(d.free).length, 0);
-        status.textContent = total
-          ? `${total} créneau${total > 1 ? 'x' : ''} d'une heure libre${total > 1 ? 's' : ''} sur les deux prochaines semaines. Cliquez, ça se réserve ici.`
-          : 'Complet sur les deux prochaines semaines. Écrivez moi et on trouvera un moment.';
+        status.textContent = `${total} créneau${total > 1 ? 'x' : ''} d'une heure libre${total > 1 ? 's' : ''} sur les deux prochaines semaines. Cliquez, ça se réserve ici.`;
       });
     })();
   </script>
