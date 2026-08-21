@@ -463,17 +463,22 @@ const openWindows: Record<string, string[]> = {
             id="booking-submit"
             class="btn btn-primary w-full justify-center"
           >
-            Confirmer le rendez-vous
+            Demander ce créneau
           </button>
         </form>
       </div>
 
       <div id="booking-done" class="hidden text-center py-4">
-        <div class="text-4xl mb-3">✓</div>
-        <h3 class="font-heading font-bold text-xl mb-2">C'est noté.</h3>
+        <div class="text-4xl mb-3">✉️</div>
+        <h3 class="font-heading font-bold text-xl mb-2">Une dernière étape.</h3>
         <p class="text-sm text-muted mb-6" id="booking-done-when"></p>
-        <p class="text-sm text-muted mb-6">
-          Vous recevez un mail de confirmation avec le lien de visio. À très vite.
+        <p class="text-sm text-muted mb-2">
+          Je viens de vous envoyer un mail : <strong>cliquez sur « Confirmer »</strong> et le créneau
+          est à vous. Le lien de visio arrive juste après.
+        </p>
+        <p class="text-xs text-muted mb-6">
+          Le lien de confirmation est valable 24 h. Rien reçu au bout de quelques minutes ? Pensez aux
+          spams, ou écrivez moi à contact@nuagegreen.eu.
         </p>
         <button type="button" data-close class="btn btn-secondary">Fermer</button>
       </div>
@@ -578,7 +583,7 @@ const openWindows: Record<string, string[]> = {
           errBox.classList.remove('hidden');
         } finally {
           btn.disabled = false;
-          btn.textContent = 'Confirmer le rendez-vous';
+          btn.textContent = 'Demander ce créneau';
         }
       });
 
